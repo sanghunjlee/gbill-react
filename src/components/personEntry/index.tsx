@@ -1,16 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
+import Person from "../../interfaces/perons";
 
 interface PersonEntryProp {
-    key?: number,
-    personName: string
-    onClose: (targetName: string) => void
-    onChange: (currName: string, newName: string) => void
+    person: Person,
+    onClose: (person: Person) => void
+    onChange: (person: Person, newName: string) => void
 }
 
-export default function PersonEntry(props: PersonEntryProp) {
+export default function PersonEntry({
+    person, onClose, onChange
+}: PersonEntryProp) {
     const inputRef = useRef<HTMLInputElement>(null);
     const spanRef = useRef<HTMLDivElement>(null);
+    const [name, setName] = useState(person.name);
     const [isEntry, setIsEntry] = useState(false);
 
     useEffect(() => {
@@ -29,8 +32,8 @@ export default function PersonEntry(props: PersonEntryProp) {
     }
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-        if (e.currentTarget.value )
-        props.onChange(props.personName, e.currentTarget.value);
+        setName(e.currentTarget.value);
+        onChange(person, e.currentTarget.value);
         if (inputRef && inputRef.current) {
             const canvas = document.createElement("canvas");
             const context = canvas.getContext("2d");
@@ -47,9 +50,15 @@ export default function PersonEntry(props: PersonEntryProp) {
     const handleBlur = (e: React.FormEvent<HTMLInputElement>) => {
         setIsEntry(false);
     }
+
+    const handleClose = (e: React.SyntheticEvent) => {
+        setName("");
+        onClose(person);
+    }
     
     return (
         <div
+            id={`person-entry-${person.id}`}
             className="relative"
         >
             <button
@@ -58,7 +67,7 @@ export default function PersonEntry(props: PersonEntryProp) {
                     "dark:border-gray-500",
                     "hover:bg-red-500 transition-colors"
                 ].join(" ")}
-                onClick={() => {props.onClose(props.personName)}}
+                onClick={handleClose}
             >
                 <FaXmark className="text-white font-bold" />
             </button>
@@ -73,14 +82,16 @@ export default function PersonEntry(props: PersonEntryProp) {
             >
                 <input 
                     type="text" 
+                    name="personName"
                     className={[
                         `text-center outline-none transition-all bg-inherit`,
                         "dark:text-gray-100 dark:placeholder:text-gray-600",
                         isEntry ? "" : "hidden"
                     ].join(" ")}
+                    aria-autocomplete="none"
                     ref={inputRef}
                     placeholder="name"
-                    value={props.personName}
+                    value={name}
                     onKeyDown={(e: React.KeyboardEvent) => {
                         if (e.key === 'Enter' || e.key === 'Tab') {
                             e.preventDefault();
@@ -96,10 +107,10 @@ export default function PersonEntry(props: PersonEntryProp) {
                         "cursor-pointer overflow-x-clip", 
                         "dark:text-gray-100",
                         isEntry ? "hidden" : "",
-                        props.personName === "" ? "text-gray-300 dark:text-gray-500" : ""
+                        name === "" ? "text-gray-300 dark:text-gray-500" : ""
                     ].join(" ")}
                 >
-                    <span>{props.personName === "" ? "name" : props.personName}</span>
+                    <span>{name === "" ? "name" : name}</span>
                 </div>
             </div>
         </div>

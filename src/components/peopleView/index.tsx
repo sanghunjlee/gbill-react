@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { FaPlus } from "react-icons/fa";
 
+import Person from "../../interfaces/perons";
 import PersonEntry from "../personEntry";
 
 export default function PeopleView() {
     const errorRef = useRef<HTMLDivElement>(null);
     const [isError, setIsError] = useState(false);
-    const [persons, setPersons] = useState<string[]>([])
+    const [persons, setPersons] = useState<Person[]>([])
 
     useEffect(() => {
         if (isError) {
@@ -29,31 +30,49 @@ export default function PeopleView() {
         }
     }, [isError])
 
-    const handleClose = (targetName: string) => {
-        setPersons(persons.filter(p => p !== targetName));
+    const handleClose = (person: Person) => {
+        const newPersons = persons.filter((p) => p.id !== person.id);
+        console.log(newPersons);
+        setPersons(newPersons);
     }
 
-    const handleChange = (currentPersonName: string, newPersonName: string) => {
-        setPersons(persons.map(p => p === currentPersonName ? newPersonName : p));
+    const handleChange = (person: Person, newPersonName: string) => {
+        const newPersons = persons.map((p) => {
+            if (p.id === person.id) {
+                p.name = newPersonName;
+            }
+            return p;
+        });
+        setPersons(newPersons);
     }
 
-    const personEntries = persons.map((p, i) => (
+    const handleAddButton = (e: React.SyntheticEvent) => {
+        let newId = persons.length > 0 ? persons[persons.length-1].id + 1 : 0;
+        if (newId !== persons.length) {
+            for (let i=0; i<persons.length; i++) {
+                if (i > 0 && persons[i-1].id + 1 !== persons[i].id){
+                    newId = persons[i-1].id + 1;
+                    break;
+                }
+            }
+        }
+
+        const newPerson: Person = {
+            id: newId,
+            name: ""
+        }
+
+        setPersons([...persons, newPerson]);
+    }
+
+    const personEntries = persons.map((p) => (
         <PersonEntry 
-            key={i}
-            personName={p}
+            key={p.id}
+            person={p}
             onClose={handleClose}
             onChange={handleChange}
         />
-    ))
-
-    const handleButton = (e: React.SyntheticEvent) => {
-        console.log('handlebutton');
-        if (!persons.includes("")) {
-            setPersons([...persons, ""]);
-        } else {
-            setIsError(true);
-        }
-    }
+    ));
 
     return (
         <div className={[
@@ -80,12 +99,13 @@ export default function PeopleView() {
             >
                 {personEntries}
                 <button
+                    id="add-person-button"
                     className={[
                         "w-[40px] p-2 border-2 rounded-lg flex justify-center items-center",
                         "dark:text-gray-100 dark:border-gray-500",
                         "hover:scale-105 hover:text-gray-500"
                     ].join(" ")}
-                    onClick={handleButton}
+                    onClick={handleAddButton}
                 >
                     <FaPlus />
                 </button>

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
 import Person from "../../interfaces/perons";
+import CircleButton from "../buttons/circleButton";
 
 interface PersonEntryProp {
     person: Person,
@@ -61,16 +62,16 @@ export default function PersonEntry({
             id={`person-entry-${person.id}`}
             className="relative"
         >
-            <button
+            <CircleButton
                 className={[
-                    "absolute w-[20px] text-[8px] border-2 p-1 rounded-full right-[-6px] top-[-6px] z-10 bg-gray-500 transition-colors",
-                    "dark:border-gray-500",
-                    "hover:bg-red-500 transition-colors"
+                    "absolute w-[16px] h-[16px] p-1 text-[8px] right-[-6px] top-[-6px] z-10",
+                    "flex justify-center items-center",
+                    "bg-gray-400 hover:bg-red-500 dark:hover:bg-red-500",
                 ].join(" ")}
                 onClick={handleClose}
             >
                 <FaXmark className="text-white font-bold" />
-            </button>
+            </CircleButton>
             <div
                 className={[
                     "w-fit min-w-[80px] max-w-[220px] h-[44px] p-2 border-2 rounded-lg text-center overflow-x-clip transition-all",

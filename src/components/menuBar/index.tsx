@@ -1,5 +1,5 @@
 import React from "react";
-import ToggleButton from "../toggleButton";
+import ToggleButton from "../buttons/toggleButton";
 
 export default function MenuBar() {
     const handleThemeClick = (toggled: boolean) => {

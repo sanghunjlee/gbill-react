@@ -4,6 +4,8 @@ import { FaPlus } from "react-icons/fa";
 
 import Person from "../../interfaces/perons";
 import PersonEntry from "../personEntry";
+import Button from "../buttons/button";
+import CircleButton from "../buttons/circleButton";
 
 export default function PeopleView() {
     const errorRef = useRef<HTMLDivElement>(null);
@@ -98,17 +100,13 @@ export default function PeopleView() {
                 ].join(" ")}
             >
                 {personEntries}
-                <button
+                <CircleButton
                     id="add-person-button"
-                    className={[
-                        "w-[40px] p-2 border-2 rounded-lg flex justify-center items-center",
-                        "dark:text-gray-100 dark:border-gray-500",
-                        "hover:scale-105 hover:text-gray-500"
-                    ].join(" ")}
+                    className="w-[40px] h-[40px] p-2 flex justify-center items-center"
                     onClick={handleAddButton}
                 >
                     <FaPlus />
-                </button>
+                </CircleButton>
             </div>
         </div>
     )

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import Button from "../buttons/button";
 import Transaction from "../../interfaces/transaction";
 import TransItem from "../transItem";
 
@@ -29,6 +30,14 @@ export default function TransView() {
         >
             <div className="w-full px-2">
                 <h1 className="text-xl font-medium dark:text-gray-100">Transactions</h1>
+            </div>
+            <div>
+                <Button>
+                    Add
+                </Button>
+                <Button>
+                    Clear
+                </Button>
             </div>
             <div className="w-full">  
                 <TransItem 

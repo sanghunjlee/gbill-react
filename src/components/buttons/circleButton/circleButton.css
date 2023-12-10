@@ -1,0 +1,12 @@
+button {
+    border-radius: 100%;
+    background-color: theme("colors.gray.100");
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+button:hover {
+    background-color: theme("colors.gray.200");
+    transform:scale(110%);
+}

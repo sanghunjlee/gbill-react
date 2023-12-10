@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
 import Person from "../../interfaces/perons";
-import PersonEntry from "../personEntry";
-import Button from "../buttons/button";
+import PersonEntry from "./personEntry";
 import CircleButton from "../buttons/circleButton";
+import Button from "../buttons/button";
 
 export default function PeopleView() {
     const errorRef = useRef<HTMLDivElement>(null);
@@ -31,6 +31,13 @@ export default function PeopleView() {
             }
         }
     }, [isError])
+
+    const raiseError = (errorMessage: string) => {
+        if (errorRef && errorRef.current) {
+            errorRef.current.innerHTML = `<p>${errorMessage}</p>`;
+            setIsError(true);
+        }
+    }
 
     const handleClose = (person: Person) => {
         const newPersons = persons.filter((p) => p.id !== person.id);
@@ -67,6 +74,14 @@ export default function PeopleView() {
         setPersons([...persons, newPerson]);
     }
 
+    const handleClearClick =(e: React.SyntheticEvent) => {
+        if (persons.length === 0) {
+            raiseError("There is nothing to clear!")
+        } else {
+            setPersons([]);
+        }
+    }
+
     const personEntries = persons.map((p) => (
         <PersonEntry 
             key={p.id}
@@ -84,15 +99,26 @@ export default function PeopleView() {
             <div className="w-full px-2">
                 <h1 className="text-xl font-medium dark:text-gray-100">Payers & Payees</h1>
             </div>
-            <div 
-                ref={errorRef}
-                className={[
-                    "text-sm text-error h-0 overflow-clip opacity-0 invisible",
-                    "dark:text-red-500",
-                    isError ? "[transition:opacity_1s_0.2s,visibility_0.5s,height_0.5s]" : "[transition:opacity_1s,visibility_0.5s,height_0.5s_0.4s]",
-                ].join(" ")}
-            >
-                <p>You cannot create more than one empty name!</p>
+            <div className="w-full flex">
+                <span className="flex-1" />
+                <div className="flex-1 flex justify-center items-center">
+                    <div 
+                        ref={errorRef}
+                        className={[
+                            "text-sm text-error overflow-clip opacity-0 invisible [transition:opacity_1s,visibility_0.5s]",
+                            "dark:text-red-500",
+                        ].join(" ")}
+                    >
+                    </div>
+                </div>
+                <div className="flex-1 flex justify-end">
+                    <Button
+                        className="px-4 py-2 text-sm font-bold"
+                        onClick={handleClearClick}
+                    >
+                        Clear
+                    </Button>
+                </div>
             </div>
             <div className={[
                 "w-full flex justify-center flex-wrap gap-2 p-2 border-2 rounded-lg",

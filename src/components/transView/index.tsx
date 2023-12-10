@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Button from "../buttons/button";
 import Transaction from "../../interfaces/transaction";
-import TransItem from "../transItem";
+import TransItem from "./transItem";
 
 export default function TransView() {
     const [trans, setTrans] = useState<Transaction[]>([{
@@ -31,11 +31,16 @@ export default function TransView() {
             <div className="w-full px-2">
                 <h1 className="text-xl font-medium dark:text-gray-100">Transactions</h1>
             </div>
-            <div>
-                <Button>
+            <div className="w-full flex">
+                <Button
+                    className="px-4 py-2 text-sm font-bold"
+                >
                     Add
                 </Button>
-                <Button>
+                <span className="flex-auto"/>
+                <Button
+                    className="px-4 py-2 text-sm font-bold"
+                >
                     Clear
                 </Button>
             </div>

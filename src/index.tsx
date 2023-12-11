@@ -15,7 +15,7 @@ import Trans from './pages/Trans';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/gbill-react",
     element: <App />,
     errorElement: <Error />,
     children: [

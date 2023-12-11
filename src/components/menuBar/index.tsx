@@ -19,7 +19,7 @@ export default function MenuBar() {
                 "dark:border-gray-500"
             ].join(" ")}
         >
-            <Link to={`/`}>
+            <Link to={`/gbill-react`}>
                 <div className="w-32 h-12 rounded-lg flex justify-center items-center bg-gray-500">
                     <div className="flex items-end gap-2 text-white">
                         <h1 className="font-bold">gBill</h1>

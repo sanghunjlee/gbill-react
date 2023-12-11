@@ -30,12 +30,12 @@ export default function TransView() {
             ].join(" ")}
         >
             <div className="w-full px-2">
-                <Link to={`/trans`}>
+                <Link to={`/gbill-react/trans`}>
                     <h1 className="text-xl font-medium dark:text-gray-100">Transactions</h1>
                 </Link>
             </div>
             <div className="w-full flex">
-                <Link to={`/trans/add`}>
+                <Link to={`/gbill-react/trans/add`}>
                     <Button
                         className="px-4 py-2 text-sm font-bold"
                     >

@@ -1,25 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+
+import MenuBar from './components/menuBar';
+import { Outlet } from 'react-router-dom';
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div className="h-screen p-4 flex justify-center dark:bg-gray-800">
+            <div className="w-screen lg:w-[80%]">
+                <MenuBar />
+                <Outlet />
+            </div>
+        </div>
   );
 }
 

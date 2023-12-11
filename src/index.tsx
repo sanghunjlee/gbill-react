@@ -7,16 +7,32 @@ import {
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
+import App from './App';
 import Home from './pages/Home'
 import Error from './pages/Error'
+import TransAdd from './pages/TransAdd';
+import Trans from './pages/Trans';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
-    errorElement: <Error />
+    element: <App />,
+    errorElement: <Error />,
+    children: [
+      { index: true, 
+        element: <Home />
+      },
+      {
+        path: "trans",
+        element: <Trans />,
+      },
+      {
+        path: "trans/add",
+        element: <TransAdd />,
+      }
 
-  }
+    ]
+  },
 ])
 
 const root = ReactDOM.createRoot(

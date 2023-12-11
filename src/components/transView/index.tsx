@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import Button from "../buttons/button";
 import Transaction from "../../interfaces/transaction";
@@ -29,20 +30,24 @@ export default function TransView() {
             ].join(" ")}
         >
             <div className="w-full px-2">
-                <h1 className="text-xl font-medium dark:text-gray-100">Transactions</h1>
+                <Link to={`/trans`}>
+                    <h1 className="text-xl font-medium dark:text-gray-100">Transactions</h1>
+                </Link>
             </div>
             <div className="w-full flex">
-                <Button
-                    className="px-4 py-2 text-sm font-bold"
-                >
-                    Add
-                </Button>
+                <Link to={`/trans/add`}>
+                    <Button
+                        className="px-4 py-2 text-sm font-bold"
+                    >
+                        Add
+                    </Button>
+                </Link>
                 <span className="flex-auto"/>
-                <Button
-                    className="px-4 py-2 text-sm font-bold"
-                >
-                    Clear
-                </Button>
+                    <Button
+                        className="px-4 py-2 text-sm font-bold"
+                    >
+                        Clear
+                    </Button>
             </div>
             <div className="w-full">  
                 <TransItem 

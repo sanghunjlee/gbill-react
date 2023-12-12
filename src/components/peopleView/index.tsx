@@ -2,83 +2,44 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { FaPlus } from "react-icons/fa";
 
-import Person from "../../interfaces/perons";
+import Person from "../../interfaces/person";
 import PersonEntry from "./personEntry";
 import CircleButton from "../buttons/circleButton";
 import Button from "../buttons/button";
+import { createPerson, deleteAllPersons, deletePerson, getPersons, updatePerson } from "../../data/persons";
+import ErrorMessage from "../errorMessage";
 
 export default function PeopleView() {
-    const errorRef = useRef<HTMLDivElement>(null);
-    const [isError, setIsError] = useState(false);
-    const [persons, setPersons] = useState<Person[]>([])
+    const [errorText, setErrorText] = useState("");
+    const [showError, setShowError] = useState(false);
+    const [persons, setPersons] = useState<Person[]>(getPersons())
 
-    useEffect(() => {
-        if (isError) {
-            if (errorRef.current) {
-                errorRef.current.style.opacity = '1';
-                errorRef.current.style.visibility = 'visible';
-                errorRef.current.style.height = '20px';
-            }
-            const timer = setTimeout(() => {
-                setIsError(false);
-            }, 3000);
-            return () => clearTimeout(timer)
-        } else {
-            if (errorRef.current) {
-                errorRef.current.style.opacity = '0';
-                errorRef.current.style.visibility = 'hidden';
-                errorRef.current.style.height = '0px';
-            }
-        }
-    }, [isError])
-
-    const raiseError = (errorMessage: string) => {
-        if (errorRef && errorRef.current) {
-            errorRef.current.innerHTML = `<p>${errorMessage}</p>`;
-            setIsError(true);
-        }
+    const raiseError = (msg: string) => {
+        setErrorText(msg);
+        setShowError(true);
     }
 
     const handleClose = (person: Person) => {
-        const newPersons = persons.filter((p) => p.id !== person.id);
-        console.log(newPersons);
-        setPersons(newPersons);
+        deletePerson(person.id);
+        setPersons(getPersons());
     }
 
     const handleChange = (person: Person, newPersonName: string) => {
-        const newPersons = persons.map((p) => {
-            if (p.id === person.id) {
-                p.name = newPersonName;
-            }
-            return p;
-        });
-        setPersons(newPersons);
+        updatePerson(person.id, {name: newPersonName});
+        setPersons(getPersons());
     }
 
     const handleAddButton = (e: React.SyntheticEvent) => {
-        let newId = persons.length > 0 ? persons[persons.length-1].id + 1 : 0;
-        if (newId !== persons.length) {
-            for (let i=0; i<persons.length; i++) {
-                if (i > 0 && persons[i-1].id + 1 !== persons[i].id){
-                    newId = persons[i-1].id + 1;
-                    break;
-                }
-            }
-        }
-
-        const newPerson: Person = {
-            id: newId,
-            name: ""
-        }
-
-        setPersons([...persons, newPerson]);
+        createPerson({ name: ""});
+        setPersons(getPersons());
     }
 
     const handleClearClick =(e: React.SyntheticEvent) => {
         if (persons.length === 0) {
             raiseError("There is nothing to clear!")
         } else {
-            setPersons([]);
+            deleteAllPersons();
+            setPersons(getPersons());
         }
     }
 
@@ -102,14 +63,11 @@ export default function PeopleView() {
             <div className="w-full flex">
                 <span className="flex-1" />
                 <div className="flex-1 flex justify-center items-center">
-                    <div 
-                        ref={errorRef}
-                        className={[
-                            "text-sm text-error overflow-clip opacity-0 invisible [transition:opacity_1s,visibility_0.5s]",
-                            "dark:text-red-500",
-                        ].join(" ")}
-                    >
-                    </div>
+                    <ErrorMessage 
+                        text={errorText}
+                        visible={showError}
+                        setVisible={setShowError}
+                    />
                 </div>
                 <div className="flex-1 flex justify-end">
                     <Button

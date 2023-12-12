@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
-import Person from "../../../interfaces/perons";
+import Person from "../../../interfaces/person";
 import CircleButton from "../../buttons/circleButton";
 
 interface PersonEntryProp {
@@ -62,19 +62,9 @@ export default function PersonEntry({
             id={`person-entry-${person.id}`}
             className="relative"
         >
-            <CircleButton
-                className={[
-                    "absolute w-[16px] h-[16px] p-1 text-[8px] right-[-6px] top-[-6px] z-10",
-                    "flex justify-center items-center",
-                    "bg-gray-400 hover:bg-red-500 dark:hover:bg-red-500",
-                ].join(" ")}
-                onClick={handleClose}
-            >
-                <FaXmark className="text-white font-bold" />
-            </CircleButton>
             <div
                 className={[
-                    "w-fit min-w-[80px] max-w-[220px] h-[44px] p-2 border-2 rounded-lg text-center overflow-x-clip transition-all",
+                    "peer w-fit min-w-[80px] max-w-[220px] h-[44px] p-2 border-2 rounded-lg text-center overflow-x-clip transition-all",
                     "dark:border-gray-500",
                     "hover:scale-105",
                     isEntry ? "border-black" : "border-inherit"
@@ -114,6 +104,17 @@ export default function PersonEntry({
                     <span>{name === "" ? "name" : name}</span>
                 </div>
             </div>
+            <CircleButton
+                className={[
+                    "absolute w-[16px] h-[16px] p-1 text-[8px] right-[-6px] top-[-6px] z-10",
+                    "flex justify-center items-center opacity-0 [transition:opacity_0.5s]",
+                    "peer-hover:opacity-100 hover:opacity-100",
+                    "bg-gray-400 hover:bg-red-500 dark:hover:bg-red-500",
+                ].join(" ")}
+                onClick={handleClose}
+            >
+                <FaXmark className="text-white font-bold" />
+            </CircleButton>
         </div>
     );
 }

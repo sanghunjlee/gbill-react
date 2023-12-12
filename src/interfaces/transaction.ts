@@ -1,7 +1,9 @@
+
 export default interface Transaction {
+    type: 'transaction',
     id: number,
-    payee: string,
-    payer: string[],
+    payer: string,
+    payee: string[],
     desc: string,
     amount: number
 }

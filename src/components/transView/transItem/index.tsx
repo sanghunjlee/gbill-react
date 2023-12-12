@@ -4,12 +4,12 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 interface TransItemProps {
     index?: string,
     desc?: string,
-    payee?: string,
+    payer?: string,
     amount?: string,
     isHeader?: boolean
 }
 
-export default function TransItem({index, desc, payee, amount, isHeader}: TransItemProps) {
+export default function TransItem({index, desc, payer, amount, isHeader}: TransItemProps) {
     return (
         <div 
             className={[
@@ -24,7 +24,7 @@ export default function TransItem({index, desc, payee, amount, isHeader}: TransI
                 <span>{desc || ""}</span>
             </div>
             <div className="w-1/4 text-center">
-                <span>{payee || ""}</span>
+                <span>{payer || ""}</span>
             </div>
             <div
                 className={[

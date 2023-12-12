@@ -1,28 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
-import Button from "../buttons/button";
 import Transaction from "../../interfaces/transaction";
+import { deleteAllTransactions } from "../../data/transactions";
+import Button from "../buttons/button";
 import TransItem from "./transItem";
 
-export default function TransView() {
-    const [trans, setTrans] = useState<Transaction[]>([{
-        id: 0,
-        payee: "PersonA",
-        payer: ["PersonA"],
-        desc: "Transaction 1",
-        amount: 30,
-    }])
 
-    const transItems = trans.map((t, i) => (
-        <TransItem 
-            key={i} 
-            index={i.toString()} 
-            desc={t.desc}
-            payee={t.payee}
-            amount={"$" + t.amount.toFixed(2)}
-        />
-    ))
+export default function TransView({ transactions }: { transactions: Transaction[] }) {
+
+    const handleClearButton = () => {
+        deleteAllTransactions();
+    }
 
     return (
         <div className={[
@@ -45,6 +34,7 @@ export default function TransView() {
                 <span className="flex-auto"/>
                     <Button
                         className="px-4 py-2 text-sm font-bold"
+                        onClick={handleClearButton}
                     >
                         Clear
                     </Button>
@@ -53,11 +43,19 @@ export default function TransView() {
                 <TransItem 
                     index={"#"} 
                     desc={"Description"}
-                    payee={"Payee"}
+                    payer={"Payer"}
                     amount={"Amount"}
                     isHeader
                 />
-                {transItems}
+                {transactions.map((t, i) => (
+                    <TransItem 
+                        key={i} 
+                        index={i.toString()}
+                        desc={t.desc}
+                        payer={t.payer}
+                        amount={"$" + t.amount.toFixed(2)}
+                    />
+                ))}
             </div>
         </div>
     )

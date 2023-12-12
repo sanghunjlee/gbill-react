@@ -8,10 +8,10 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 import App from './App';
-import Home from './pages/Home'
+import Home, { loader as homeLoader } from './pages/Home'
 import Error from './pages/Error'
 import TransAdd from './pages/TransAdd';
-import Trans from './pages/Trans';
+import Trans, { loader as transLoader }from './pages/Trans';
 
 const router = createBrowserRouter([
   {
@@ -20,11 +20,13 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       { index: true, 
-        element: <Home />
+        element: <Home />,
+        loader: homeLoader
       },
       {
         path: "trans",
         element: <Trans />,
+        loader: transLoader
       },
       {
         path: "trans/add",

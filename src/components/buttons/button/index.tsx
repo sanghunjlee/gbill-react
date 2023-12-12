@@ -8,7 +8,7 @@ export default function Button({ id, className, onClick, children }: ButtonProps
             id={id}
             className={[
                 className,
-                "rounded-lg transition bg-gray-100",
+                "p-2 rounded-lg transition bg-gray-100",
                 "dark:text-gray-100 dark:border-gray-500",
                 "hover:scale-110 hover:bg-gray-200"
             ].join(" ")}

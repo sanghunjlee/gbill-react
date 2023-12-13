@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import Transaction from "../../interfaces/transaction";
-import { deleteAllTransactions } from "../../data/transactions";
+import Transaction from "../../interfaces/interfaceTransaction";
+import { deleteAllTransactions, getTransactions } from "../../data/transactions";
 import Button from "../buttons/button";
 import TransItem from "./transItem";
+import { getPerson } from "../../data/persons";
 
 
 export default function TransView({ transactions }: { transactions: Transaction[] }) {
+    const [_transaction, setTransaction] = useState<Transaction[]>(transactions)
 
     const handleClearButton = () => {
         deleteAllTransactions();
+        setTransaction(getTransactions());
     }
 
     return (
@@ -41,18 +44,18 @@ export default function TransView({ transactions }: { transactions: Transaction[
             </div>
             <div className="w-full">  
                 <TransItem 
-                    index={"#"} 
+                    index={"#"}
                     desc={"Description"}
-                    payer={"Payer"}
+                    payerName={"Payer"}
                     amount={"Amount"}
                     isHeader
                 />
-                {transactions.map((t, i) => (
+                {_transaction.map((t, i) => (
                     <TransItem 
                         key={i} 
                         index={i.toString()}
                         desc={t.desc}
-                        payer={t.payer}
+                        payerName={getPerson(t.payerId)?.name || ""}
                         amount={"$" + t.amount.toFixed(2)}
                     />
                 ))}

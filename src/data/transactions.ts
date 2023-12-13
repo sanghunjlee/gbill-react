@@ -1,9 +1,10 @@
-import Transaction from "../interfaces/transaction";
+import Transaction from "../interfaces/interfaceTransaction";
+import { addPersonTransaction, updateTrasnactionPersons } from "./personTransactions";
 
 export function getTransactions(): Transaction[] {
     const storedItem = localStorage.getItem("transactions");
-    const transactions = storedItem ? JSON.parse(storedItem) : [];
-    return Array.isArray(transactions) ? transactions.map(t => t as Transaction).sort((a,b) => a.id - b.id) : [];
+    const transactions: Transaction[] = storedItem ? JSON.parse(storedItem) : [];
+    return transactions.sort((a,b) => a.id - b.id);
 }
 
 export function getTransaction(id: number): Transaction | null {
@@ -13,8 +14,8 @@ export function getTransaction(id: number): Transaction | null {
 }
 
 export function createTransaction({
-    payer, payee, desc, amount
-}: Pick<Transaction, "payer" | "payee" | "desc" | "amount">) {
+    payerId, payeeIds, desc, amount
+}: Pick<Transaction, "payerId" | "payeeIds" | "desc" | "amount">) {
     let transactions = getTransactions();
     let newId = transactions.length > 0 ? transactions[transactions.length-1].id + 1 : 0;
     if (newId !== transactions.length) {
@@ -28,13 +29,16 @@ export function createTransaction({
     const newTransaction: Transaction = {
         type: "transaction",
         id: newId,
-        payer,
-        payee,
+        payerId,
+        payeeIds,
         desc,
         amount
-    }
+    };
     transactions.push(newTransaction);
     set(transactions);
+
+    const personIds = Array.from(new Set([payerId, ...payeeIds]).values());
+    personIds.forEach(pid => addPersonTransaction({personId: pid, transactionId: newId}));
 }
 
 export function updateTransaction(id: number, update: Partial<Transaction>) {
@@ -43,6 +47,18 @@ export function updateTransaction(id: number, update: Partial<Transaction>) {
     if (!transaction) throw new Error(`No transaction found for: ${id}`);
     Object.assign(transaction, update);
     set(transactions);
+
+    let personIds: number[] = [];
+    if (update.payerId) personIds.push(update.payerId);
+    if (update.payeeIds) personIds.push(...update.payeeIds);
+    if (personIds.length > 0) {
+        personIds.forEach(pid => {
+            const result = updateTrasnactionPersons(id, pid);
+            if (!result) {
+                addPersonTransaction({personId: pid, transactionId: id});
+            }
+        });
+    }
 }
 
 export function deleteTransaction(id: number): boolean {

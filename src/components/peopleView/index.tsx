@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { FaPlus } from "react-icons/fa";
 
-import Person from "../../interfaces/person";
+import Person from "../../interfaces/interfacePerson";
 import PersonEntry from "./personEntry";
 import CircleButton from "../buttons/circleButton";
 import Button from "../buttons/button";

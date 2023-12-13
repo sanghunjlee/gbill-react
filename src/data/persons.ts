@@ -1,4 +1,4 @@
-import Person from "../interfaces/person";
+import Person from "../interfaces/interfacePerson";
 
 export function getPersons(): Person[] {
     const storedItem = localStorage.getItem("persons");
@@ -6,14 +6,14 @@ export function getPersons(): Person[] {
     return Array.isArray(persons) ? persons.map(t => t as Person).sort((a,b) => a.id - b.id) : [];
 }
 
-export function getPerson(id: number): Person | null {
+export function getPerson(id: number): Person | undefined {
     const persons = getPersons();
     const person = persons.find(t => t.id === id);
-    return person ?? null;
+    return person ?? undefined;
 }
 
 export function createPerson({
-    name
+    name,
 }: Pick<Person, "name">) {
     
     let persons = getPersons();
@@ -56,6 +56,7 @@ export function deletePerson(id: number): boolean {
 }
 
 export function deleteAllPersons() {
+    const persons = getPersons();
     set([]);
 }
 

@@ -1,10 +1,10 @@
 import React from "react";
 import { getTransactions } from "../data/transactions";
-import Transaction from "../interfaces/transaction";
+import Transaction from "../interfaces/interfaceTransaction";
 import PeopleView from "../components/peopleView";
 import TransView from "../components/transView";
 import { useLoaderData } from "react-router-dom";
-import Person from "../interfaces/person";
+import Person from "../interfaces/interfacePerson";
 
 interface LoaderDataType {
     persons: Person[],

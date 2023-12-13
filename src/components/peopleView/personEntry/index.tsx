@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
-import Person from "../../../interfaces/person";
+import Person from "../../../interfaces/interfacePerson";
 import CircleButton from "../../buttons/circleButton";
 
 interface PersonEntryProp {

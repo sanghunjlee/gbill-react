@@ -1,36 +1,59 @@
-import { Form } from "react-router-dom";
-import { getPersons } from "../data/persons";
+import { Form, redirect, useNavigate } from "react-router-dom";
+import { getPerson, getPersons } from "../data/persons";
 import PersonEntry from "../components/peopleView/personEntry";
 import CircleButton from "../components/buttons/circleButton";
 import { FaPlus } from "react-icons/fa";
 import { useState } from "react";
-import Person from "../interfaces/person";
+import Person from "../interfaces/interfacePerson";
 import Button from "../components/buttons/button";
+import PayeeSelect from "../components/payeeSelect";
+import { createTransaction } from "../data/transactions";
+import Select from "../components/select";
 
 
 export default function TransAdd() {
-    const [payees, setPayees] = useState<Person[]>([]);
+    const navigate = useNavigate();
 
-    const handlePayeeClose = (payee: Person) => {
-        const newPayees = payees.filter(p => p.id !== payee.id);
+    const [desc, setDesc] = useState("");
+    const [amount, setAmount] = useState<number>();
+    const [payer, setPayer] = useState<Person>(getPersons()[0]);
+    const [payees, setPayees] = useState<Person[]>([]);
+    
+    const handleSubmitButton = () => {
+        console.log({
+            payer,
+            payee: payees,
+            desc,
+            amount,
+        });
+        if (payer !== undefined && amount !== undefined) {
+            createTransaction({
+                payerId: payer.id,
+                payeeIds: payees.map(p => p.id),
+                desc,
+                amount,
+            });
+            navigate(-1);
+        }
+    };
+
+    const handleCancelButton = () => {
+        navigate(-1);
+    }
+
+    const handlePayeeClose = (index: number) => {
+        const newPayees = payees.filter((_, i) => i !== index);
         setPayees(newPayees);
     }
 
-    const handlePayeeChange = (payee: Person, newPayeeName: string) => {
-        const newPayees = payees.map(p => p.id === payee.id ? Object.assign(p, {name: newPayeeName}) : p);
+    const handlePayeeChange = (index: number, newPayee: Person) => {
+        const newPayees = payees.map(p => p.id === index ? newPayee : p);
         setPayees(newPayees);
     }
         
     const handleAddButton = () => {
-        let sorted = payees.sort((a,b) => b.id - a.id);
-        console.log(sorted);
-        let newId = sorted.length > 0 ? sorted[0].id + 1 : 0;
-        const newPayee: Person = {
-            type: "person",
-            id: newId,
-            name: ""
-        };
-        setPayees([...payees, newPayee]);
+        const newPayee = getPersons()[0];
+        if (newPayee) setPayees([...payees, newPayee]);
     }
 
     return (
@@ -42,10 +65,14 @@ export default function TransAdd() {
                 <h1 className="text-xl font-medium dark:text-gray-100">Add a New Transaction</h1>
                 <span className="flex-auto"/>
                 <div className="flex gap-4">
-                    <Button>
+                    <Button
+                        onClick={handleSubmitButton}
+                    >
                         Submit
                     </Button>
-                    <Button>
+                    <Button
+                        onClick={handleCancelButton}
+                    >
                         Cancel
                     </Button>
                 </div>
@@ -63,6 +90,10 @@ export default function TransAdd() {
                         ].join(" ")}
                         aria-label="description"
                         placeholder="Add a description"
+                        value={desc}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            setDesc(event.target?.value)
+                        }}
                     />
                 </div>
                 <div className="w-full flex justify-between">
@@ -70,17 +101,12 @@ export default function TransAdd() {
                         <span className="font-bold">
                             Payer
                         </span>
-                        <select 
-                            name="payer"
+                        <Select 
                             className="p-2 rounded-lg border-2"
+                            options={getPersons().map(p => p.name)}
                             aria-label="payer"
-                        >
-                            {getPersons().map((person, i) => (
-                                <option key={i} value={person.id}>
-                                    {person.name}
-                                </option>
-                            ))}
-                        </select>
+                            onChange={(index) => setPayer(getPersons()[index])}
+                        />
                     </div>
                     <div className="flex items-center gap-4">
                         <span className="font-bold">
@@ -95,6 +121,10 @@ export default function TransAdd() {
                                 className="text-right"
                                 aria-label="amount"
                                 placeholder="0.00"
+                                value={amount}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                    setAmount(parseFloat(event.target?.value));
+                                }}
                             />
                         </div>
                     </div>
@@ -108,11 +138,11 @@ export default function TransAdd() {
                         "dark:border-gray-500"
                         ].join(" ")}
                     >
-                        {payees.map((p) => (
-                            <PersonEntry 
-                                key={p.id}
-                                person={p}
-                                onClose={handlePayeeClose}
+                        {payees.map((p, i) => (
+                            <PayeeSelect 
+                                key={i}
+                                value={p}
+                                onClose={() => handlePayeeClose(i)}
                                 onChange={handlePayeeChange}
                             />
                         ))}

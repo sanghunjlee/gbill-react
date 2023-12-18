@@ -1,59 +1,57 @@
-import { Form, redirect, useNavigate } from "react-router-dom";
-import { getPerson, getPersons } from "../data/persons";
-import PersonEntry from "../components/peopleView/personEntry";
-import CircleButton from "../components/buttons/circleButton";
-import { FaPlus } from "react-icons/fa";
 import { useState } from "react";
-import Person from "../interfaces/interfacePerson";
-import Button from "../components/buttons/button";
-import PayeeSelect from "../components/payeeSelect";
-import { createTransaction } from "../data/transactions";
-import Select from "../components/select";
+import Transaction, { PartialTransaction } from "../../interfaces/interfaceTransaction";
+import Button from "../buttons/button";
+import CircleButton from "../buttons/circleButton";
+import PayeeSelect from "../payeeSelect";
+import { getPerson, getPersons } from "../../data/persons";
+import Select from "../select";
+import { FaPlus } from "react-icons/fa";
+import Person from "../../interfaces/interfacePerson";
 
+interface TransFormProps {
+    initialValue?: Transaction,
+    readonly?: boolean,
+    onSubmit?: (trans: PartialTransaction) => void,
+    onCancel?: () => void,
+}
 
-export default function TransAdd() {
-    const navigate = useNavigate();
+export default function TransForm({
+    initialValue, readonly, onSubmit, onCancel
+}: TransFormProps) {
+    const [amount, setAmount] = useState(initialValue ? initialValue.amount : undefined);
+    const [desc, setDesc] = useState(initialValue ? initialValue.desc : '');
+    const [payeeIds, setPayeeIds] = useState(initialValue ? initialValue.payeeIds : [getPersons()[0].id]);
+    const [payerId, setPayerId] = useState(initialValue ? initialValue.payerId : getPersons()[0].id);
 
-    const [desc, setDesc] = useState("");
-    const [amount, setAmount] = useState<number>();
-    const [payer, setPayer] = useState<Person>(getPersons()[0]);
-    const [payees, setPayees] = useState<Person[]>([]);
-    
     const handleSubmitButton = () => {
-        console.log({
-            payer,
-            payee: payees,
-            desc,
-            amount,
-        });
-        if (payer !== undefined && amount !== undefined) {
-            createTransaction({
-                payerId: payer.id,
-                payeeIds: payees.map(p => p.id),
-                desc,
-                amount,
-            });
-            navigate(-1);
-        }
-    };
+        const newTrans: PartialTransaction = {
+            amount: amount ?? 0,
+            desc: desc !== '' ? desc : 'Untitled',
+            payeeIds,
+            payerId,
+        };
 
+        if (onSubmit) onSubmit(newTrans);
+    }
     const handleCancelButton = () => {
-        navigate(-1);
+        if (onCancel) onCancel();
     }
 
     const handlePayeeClose = (index: number) => {
-        const newPayees = payees.filter((_, i) => i !== index);
-        setPayees(newPayees);
+        const newPayeeIds = payeeIds.filter((_, i) => i !== index);
+        setPayeeIds(newPayeeIds);
     }
 
     const handlePayeeChange = (index: number, newPayee: Person) => {
-        const newPayees = payees.map(p => p.id === index ? newPayee : p);
-        setPayees(newPayees);
+        const newPayeeIds = payeeIds.map((p, i) => i === index ? newPayee.id : p);
+        console.log('payee changed:', newPayeeIds);
+        setPayeeIds(newPayeeIds);
     }
-        
-    const handleAddButton = () => {
-        const newPayee = getPersons()[0];
-        if (newPayee) setPayees([...payees, newPayee]);
+
+    const handleAddPayeeButton = () => {
+        const newPayeeId = getPersons()[0]?.id;
+        console.log(newPayeeId);
+        if (newPayeeId !== undefined) setPayeeIds([...payeeIds, newPayeeId]);
     }
 
     return (
@@ -103,9 +101,10 @@ export default function TransAdd() {
                         </span>
                         <Select 
                             className="p-2 rounded-lg border-2"
+                            selectedIndex={getPersons().findIndex(p => p.id == payerId)}
                             options={getPersons().map(p => p.name)}
                             aria-label="payer"
-                            onChange={(index) => setPayer(getPersons()[index])}
+                            onChange={(index: number) => setPayerId(getPersons()[index].id)}
                         />
                     </div>
                     <div className="flex items-center gap-4">
@@ -118,10 +117,12 @@ export default function TransAdd() {
                                 name="amount"
                                 type="number"
                                 step="0.01"
-                                className="text-right"
+                                className={[
+                                    "text-right",
+                                ].join(" ")}
                                 aria-label="amount"
-                                placeholder="0.00"
                                 value={amount}
+                                placeholder="0.00"
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                     setAmount(parseFloat(event.target?.value));
                                 }}
@@ -138,10 +139,11 @@ export default function TransAdd() {
                         "dark:border-gray-500"
                         ].join(" ")}
                     >
-                        {payees.map((p, i) => (
+                        {payeeIds.map((pid, i) => (
                             <PayeeSelect 
                                 key={i}
-                                value={p}
+                                index={i}
+                                value={getPerson(pid)}
                                 onClose={() => handlePayeeClose(i)}
                                 onChange={handlePayeeChange}
                             />
@@ -149,7 +151,7 @@ export default function TransAdd() {
                         <CircleButton
                             id="add-person-button"
                             className="w-[40px] h-[40px] p-2 flex justify-center items-center"
-                            onClick={handleAddButton}
+                            onClick={handleAddPayeeButton}
                         >
                             <FaPlus />
                         </CircleButton>

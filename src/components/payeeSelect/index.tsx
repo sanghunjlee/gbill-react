@@ -6,13 +6,14 @@ import Select from "../select";
 import { getPersons } from "../../data/persons";
 
 interface PayeeSelectProps {
-    value: Person,
+    index: number,
+    value?: Person,
     onChange: (index: number, newPayee: Person) => void,
     onClose: () => void,
 }
 
-export default function PayeeSelect({ value, onChange, onClose }: PayeeSelectProps) {
-    const [selected, setSelected] = useState<Person>(value);
+export default function PayeeSelect({ index, value, onChange, onClose }: PayeeSelectProps) {
+    const [selected, setSelected] = useState<Person | undefined>(value);
     const [options, setOptions] = useState<Array<Person>>(getPersons());
 
     const handleClose = () => {
@@ -20,6 +21,7 @@ export default function PayeeSelect({ value, onChange, onClose }: PayeeSelectPro
     }
     const handleSelectChange = (newIndex: number) => {
         setSelected(options[newIndex]);
+        onChange(index, options[newIndex]);
     }
 
     return (

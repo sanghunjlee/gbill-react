@@ -22,9 +22,11 @@ export default function TransView({ transactions }: { transactions: Transaction[
             ].join(" ")}
         >
             <div className="w-full px-2">
-                <Link to={`/gbill-react/trans`}>
-                    <h1 className="text-xl font-medium dark:text-gray-100">Transactions</h1>
-                </Link>
+                <div className="w-fit transition hover:scale-110">
+                    <Link to={`/gbill-react/trans`}>
+                        <h1 className="text-xl font-medium dark:text-gray-100">Transactions</h1>
+                    </Link>
+                </div>
             </div>
             <div className="w-full flex">
                 <Link to={`/gbill-react/trans/add`}>
@@ -53,6 +55,7 @@ export default function TransView({ transactions }: { transactions: Transaction[
                 {_transaction.map((t, i) => (
                     <TransItem 
                         key={i} 
+                        id={t.id}
                         index={i.toString()}
                         desc={t.desc}
                         payerName={getPerson(t.payerId)?.name || ""}

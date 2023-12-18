@@ -7,11 +7,12 @@ import {
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
-import App from './App';
-import Home, { loader as homeLoader } from './pages/Home'
-import Error from './pages/Error'
-import TransAdd from './pages/TransAdd';
-import Trans, { loader as transLoader }from './pages/Trans';
+import App from './pages/App';
+import Home, { loader as homeLoader } from './pages/home'
+import Error from './pages/error'
+import Trans, { loader as transLoader }from './pages/trans';
+import TransAdd from './pages/trans/add';
+import TransEdit, {loader as transEditLoader} from './pages/trans/edit';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,14 @@ const router = createBrowserRouter([
       {
         path: "trans/add",
         element: <TransAdd />,
+      },
+      {
+        path: "trans/:transId/edit",
+        element: <TransEdit />,
+        loader: transEditLoader
+      },
+      {
+        path: "trans/:transId/delete"
       }
 
     ]

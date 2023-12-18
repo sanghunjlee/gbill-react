@@ -9,7 +9,7 @@ export function getPersons(): Person[] {
 export function getPerson(id: number): Person | undefined {
     const persons = getPersons();
     const person = persons.find(t => t.id === id);
-    return person ?? undefined;
+    return person;
 }
 
 export function createPerson({

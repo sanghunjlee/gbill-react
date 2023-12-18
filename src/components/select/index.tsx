@@ -53,7 +53,7 @@ export default function Select({ className, selectedIndex, options, onChange }: 
                 className={[
                     "absolute z-20 left-0 right-0 mt-2",
                     "border-2 rounded-md bg-white",
-                    open ? "opacity-100" : "opacity-0",
+                    open ? "opacity-100 visible" : "opacity-0 invisible",
                 ].join(" ")}
             >
                 {options.map((opt, i) => (

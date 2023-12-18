@@ -1,6 +1,6 @@
 import React from 'react';
 
-import MenuBar from './components/menuBar';
+import MenuBar from '../components/menuBar';
 import { Outlet } from 'react-router-dom';
 
 

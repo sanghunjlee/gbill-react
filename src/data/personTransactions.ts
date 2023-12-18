@@ -66,6 +66,10 @@ export function deletePersonTransaction({
     return false;
 }
 
+export function deleteAllPersonTransactions() {
+    set([]);
+}
+
 function set(personTransactions: PersonTransaction[]) {
     localStorage.setItem("personTransactions", JSON.stringify(personTransactions));
 }

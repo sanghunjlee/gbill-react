@@ -1,5 +1,5 @@
 import Transaction, { PartialTransaction } from "../interfaces/interfaceTransaction";
-import { addPersonTransaction, updateTrasnactionPersons } from "./personTransactions";
+import { addPersonTransaction, deleteAllPersonTransactions, deletePersonTransaction, updateTrasnactionPersons } from "./personTransactions";
 
 export function getTransactions(): Transaction[] {
     const storedItem = localStorage.getItem("transactions");
@@ -65,6 +65,8 @@ export function deleteTransaction(id: string): boolean {
             .sort((a,b) => a.index - b.index)
             .forEach((t, i) => t.index = i)
         set(transactions);
+
+        deletePersonTransaction({transactionId: id});
         return true;
 
     }
@@ -73,6 +75,7 @@ export function deleteTransaction(id: string): boolean {
 
 export function deleteAllTransactions() {
     set([]);
+    deleteAllPersonTransactions();
 }
 
 export function generateNewTransIndex(): number {

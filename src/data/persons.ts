@@ -1,4 +1,5 @@
 import Person from "../interfaces/interfacePerson";
+import { getTransactionIds } from "./personTransactions";
 
 export function getPersons(): Person[] {
     const storedItem = localStorage.getItem("persons");
@@ -55,9 +56,17 @@ export function deletePerson(id: number): boolean {
     return false;
 }
 
-export function deleteAllPersons() {
+export function deleteAllPersons(): boolean {
     const persons = getPersons();
-    set([]);
+    const filtered = persons.filter(p => {
+        const tids = getTransactionIds(p.id);
+        return tids.length > 0;
+    })
+    if (filtered.length < persons.length) {
+        set(filtered);
+        return true;
+    }
+    return false;
 }
 
 function set(persons: Person[]) {

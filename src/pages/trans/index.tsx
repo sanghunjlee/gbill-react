@@ -16,7 +16,7 @@ interface TransProps {
 
 export default function Trans({onTransChange}: TransProps) {
     const navigate = useNavigate();
-    const {transactions, setTransactions} = useContext(DataContext);
+    const {transactions, updateTransactions} = useContext(DataContext);
     const [errorText, setErrorText] = useState("");
     const [showError, setShowError] = useState(false);
 
@@ -40,7 +40,7 @@ export default function Trans({onTransChange}: TransProps) {
             raiseError("There is nothing to clear!")
         } else {
             deleteAllTransactions();
-            setTransactions?.(getTransactions());
+            updateTransactions();
         }
     }
 

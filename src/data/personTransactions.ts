@@ -3,10 +3,10 @@ import PersonTransaction from "../interfaces/interfacePersonTransaction";
 export function getPersonTransactions() {
     const storedItem = localStorage.getItem("personTransactions");
     const persons: PersonTransaction[] = storedItem ? JSON.parse(storedItem) : [];
-    return persons.sort((a,b) => (a.personId - b.personId) || (a.transactionId.localeCompare(b.transactionId)));
+    return persons.sort((a,b) => (a.personId.localeCompare(b.personId)) || (a.transactionId.localeCompare(b.transactionId)));
 }
 
-export function getTransactionIds(personId: number) {
+export function getTransactionIds(personId: string) {
     const pts = getPersonTransactions();
     return pts.filter(pt => pt.personId === personId).map(pt => pt.transactionId);
 }
@@ -32,7 +32,7 @@ export function addPersonTransaction({
     return false;
 }
 
-export function updateTrasnactionPersons(transactionId: string, newPersonId: number): boolean {
+export function updateTrasnactionPersons(transactionId: string, newPersonId: string): boolean {
     const pts = getPersonTransactions();
     let result = false;
     const newPts = pts.map(pt => {

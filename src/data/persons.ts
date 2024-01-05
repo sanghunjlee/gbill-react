@@ -4,10 +4,10 @@ import { getTransactionIds } from "./personTransactions";
 export function getPersons(): Person[] {
     const storedItem = localStorage.getItem("persons");
     const persons = storedItem ? JSON.parse(storedItem) : [];
-    return Array.isArray(persons) ? persons.map(t => t as Person).sort((a,b) => a.id - b.id) : [];
+    return Array.isArray(persons) ? persons.map(t => t as Person).sort((a,b) => a.index - b.index) : [];
 }
 
-export function getPerson(id: number): Person | undefined {
+export function getPerson(id: string): Person | undefined {
     const persons = getPersons();
     const person = persons.find(t => t.id === id);
     return person;
@@ -18,26 +18,20 @@ export function createPerson({
 }: Pick<Person, "name">) {
     
     let persons = getPersons();
-    let newId = persons.length > 0 ? persons[persons.length-1].id + 1 : 0;
-    if (newId !== persons.length) {
-        for (let i=0; i<persons.length; i++) {
-            if (i > 0 && persons[i-1].id + 1 !== persons[i].id){
-                newId = persons[i-1].id + 1;
-                break;
-            }
-        }
-    }
+    const newId = crypto.randomUUID()
+    const newIndex = generateNewPersonIndex();
     
     const newPerson: Person = {
         type: "person",
         id: newId,
+        index: newIndex,
         name
     }
     persons.push(newPerson);
     set(persons);
 }
 
-export function updatePerson(id: number, update: Partial<Person>) {
+export function updatePerson(id: string, update: Partial<Person>) {
     const persons = getPersons();
     let person = persons.find(t => t.id === id);
     if (!person) throw new Error(`No person found for: ${id}`);
@@ -45,7 +39,7 @@ export function updatePerson(id: number, update: Partial<Person>) {
     set(persons);
 }
 
-export function deletePerson(id: number): boolean {
+export function deletePerson(id: string): boolean {
     const persons = getPersons();
     const index = persons.findIndex(t => t.id === id);
     if (index > -1) {
@@ -67,6 +61,11 @@ export function deleteAllPersons(): boolean {
         return true;
     }
     return false;
+}
+
+export function generateNewPersonIndex(): number {
+    const persons = getPersons();
+    return Math.max(...persons.map(p => p.index)) + 1;
 }
 
 function set(persons: Person[]) {

@@ -42,7 +42,7 @@ export function updateTransaction(id: string, update: Partial<Transaction>) {
     Object.assign(transaction, update);
     set(transactions);
 
-    let personIds: number[] = [];
+    let personIds: string[] = [];
     if (update.payerId) personIds.push(update.payerId);
     if (update.payeeIds) personIds.push(...update.payeeIds);
     if (personIds.length > 0) {

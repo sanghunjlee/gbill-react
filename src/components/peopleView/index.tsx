@@ -14,7 +14,7 @@ import { DataContext } from "../../contexts/pageContext";
 export default function PeopleView() {
     const [errorText, setErrorText] = useState("");
     const [showError, setShowError] = useState(false);
-    const {persons, setPersons} = useContext(DataContext);
+    const {persons, updatePersons} = useContext(DataContext);
 
     const raiseError = (msg: string) => {
         setErrorText(msg);
@@ -23,17 +23,17 @@ export default function PeopleView() {
 
     const handleClose = (person: Person) => {
         deletePerson(person.id);
-        setPersons?.(getPersons());
+        updatePersons()
     }
 
     const handleChange = (person: Person, newPersonName: string) => {
         updatePerson(person.id, {name: newPersonName});
-        setPersons?.(getPersons());
+        updatePersons()
     }
 
     const handleAddButton = (e: React.SyntheticEvent) => {
         createPerson({ name: ""});
-        setPersons?.(getPersons());
+        updatePersons()
     }
 
     const handleClearClick =(e: React.SyntheticEvent) => {
@@ -41,7 +41,7 @@ export default function PeopleView() {
             raiseError("There is nothing to clear!")
         } else {
             deleteAllPersons();
-            setPersons?.(getPersons());
+            updatePersons()
         }
     }
 

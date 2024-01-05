@@ -1,5 +1,5 @@
 export default interface PersonTransaction {
     type: 'personTransaction',
-    personId: number,
+    personId: string,
     transactionId: string
 }

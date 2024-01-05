@@ -3,8 +3,8 @@ export default interface Transaction {
     type: 'transaction',
     id: string,
     index: number,
-    payerId: number,
-    payeeIds: number[],
+    payerId: string,
+    payeeIds: string[],
     desc: string,
     amount: number
 }

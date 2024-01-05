@@ -1,5 +1,6 @@
 export default interface Person {
     type: 'person',
-    id: number,
+    id: string,
+    index: number,
     name: string,
 }

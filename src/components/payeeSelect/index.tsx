@@ -37,6 +37,7 @@ export default function PayeeSelect({ index, value, onChange, onClose }: PayeeSe
             >
                 <Select 
                     options={options.map(p => p.name)}
+                    selectedIndex={options.findIndex(p => selected ? p.id === selected.id : null)}
                     onChange={handleSelectChange}
                 />
             </div>

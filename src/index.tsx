@@ -8,9 +8,9 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 import App from './pages/App';
-import Home, { loader as homeLoader } from './pages/home'
+import Home from './pages/home'
 import Error from './pages/error'
-import Trans, { loader as transLoader }from './pages/trans';
+import Trans from './pages/trans';
 import TransAdd from './pages/trans/add';
 import TransEdit, {loader as transEditLoader} from './pages/trans/edit';
 
@@ -22,24 +22,22 @@ const router = createBrowserRouter([
     children: [
       { index: true, 
         element: <Home />,
-        loader: homeLoader
       },
       {
         path: "trans",
         element: <Trans />,
-        loader: transLoader
       },
       {
         path: "trans/add",
         element: <TransAdd />,
       },
       {
-        path: "trans/:transId/edit",
+        path: "trans/edit/:transId",
         element: <TransEdit />,
         loader: transEditLoader
       },
       {
-        path: "trans/:transId/delete"
+        path: "trans/delete/:transId"
       }
 
     ]

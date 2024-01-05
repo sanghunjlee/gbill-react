@@ -7,6 +7,7 @@ import { getPerson, getPersons } from "../../data/persons";
 import Select from "../select";
 import { FaPlus } from "react-icons/fa";
 import Person from "../../interfaces/interfacePerson";
+import { updateTransaction } from "../../data/transactions";
 
 interface TransFormProps {
     initialValue?: Transaction,
@@ -51,12 +52,16 @@ export default function TransForm({
     const handleAddPayeeButton = () => {
         const newPayeeId = getPersons()[0]?.id;
         console.log(newPayeeId);
-        if (newPayeeId !== undefined) setPayeeIds([...payeeIds, newPayeeId]);
+        if (newPayeeId !== undefined) {
+            const newPayeeIds = [...payeeIds, newPayeeId];
+            setPayeeIds(newPayeeIds);
+        }
     }
 
     return (
         <div className={[
             "w-inherit m-2 p-2 flex flex-col items-center gap-8",
+            "dark:text-gray-100"
         ].join(" ")}
         >
             <div className="w-full px-2 flex">
@@ -84,7 +89,8 @@ export default function TransForm({
                         name="desc"
                         type="text"
                         className={[
-                            "w-full p-2 rounded-lg border-2"
+                            "bg-[white] w-full p-2 rounded-lg border-2",
+                            "dark:bg-gray-800"
                         ].join(" ")}
                         aria-label="description"
                         placeholder="Add a description"
@@ -118,7 +124,8 @@ export default function TransForm({
                                 type="number"
                                 step="0.01"
                                 className={[
-                                    "text-right",
+                                    "bg-[white] text-right",
+                                    "dark:bg-gray-800"
                                 ].join(" ")}
                                 aria-label="amount"
                                 value={amount}

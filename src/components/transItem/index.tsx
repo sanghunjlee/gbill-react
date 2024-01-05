@@ -1,6 +1,6 @@
 import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import Person from "../../../interfaces/interfacePerson";
+import Person from "../../interfaces/interfacePerson";
 import { Link } from "react-router-dom";
 
 interface TransItemProps {
@@ -41,7 +41,7 @@ export default function TransItem({id, index, desc, payerName, amount, isHeader}
                 {
                     isHeader ? <>
                     </> : <>
-                        <Link to={`/gbill-react/trans/${id}/edit`} className="transition hover:scale-110"><FaEdit /></Link>
+                        <Link to={`/gbill-react/trans/edit/${id}`} className="transition hover:scale-110"><FaEdit /></Link>
                         <button><FaTrash /></button>
                     </>
                 }

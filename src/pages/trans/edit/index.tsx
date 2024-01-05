@@ -1,11 +1,7 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, ParamParseKey, Params, RouteObject, useLoaderData } from "react-router-dom";
-import { getTransaction } from "../../../data/transactions";
-import Transaction from "../../../interfaces/interfaceTransaction";
+import { ActionFunctionArgs, LoaderFunctionArgs, ParamParseKey, Params, RouteObject, useLoaderData, useNavigate } from "react-router-dom";
+import { getTransaction, updateTransaction } from "../../../data/transactions";
+import Transaction, { PartialTransaction } from "../../../interfaces/interfaceTransaction";
 import TransForm from "../../../components/transForm";
-
-const PathNames = {
-    transId: '/trans/:transId',
-} as const;
 
 interface TransEditProps extends LoaderFunctionArgs {
     params: {
@@ -23,13 +19,29 @@ export async function loader({ params }: TransEditProps ): Promise<TransEditLoad
 }
 
 export default function TransEdit() {
+    const navigate = useNavigate();
     const { transaction } = useLoaderData() as TransEditLoaderData;
+    
+    const onSubmit = (partialTransaction: PartialTransaction) => {
+        if (transaction) {
+            updateTransaction(
+                transaction.id,
+                partialTransaction
+            );
+            navigate(-1);
+        }
+    };
+
+    const onCancel = () => {
+        navigate(-1);
+    }
 
     return (
         <>
             <TransForm 
                 initialValue={transaction}
-
+                onSubmit={onSubmit}
+                onCancel={onCancel}
             />
         </>
     )

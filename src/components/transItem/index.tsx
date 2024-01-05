@@ -18,7 +18,7 @@ export default function TransItem({id, index, desc, payerName, amount, isHeader}
             className={[
                 "w-full flex gap-2 px-4 py-2",
                 "dark:text-gray-100",
-                isHeader ? "font-bold" : "border-2 rounded-lg",
+                isHeader ? "font-bold" : "border-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600",
             ].join(" ")}
         >
             <div className="w-[30px]">
@@ -27,7 +27,10 @@ export default function TransItem({id, index, desc, payerName, amount, isHeader}
             <div className="w-1/2">
                 <span>{desc || ""}</span>
             </div>
-            <div className="w-1/4 text-center">
+            <div className={[
+                "w-1/4 text-center",
+                "hidden sm:block",
+            ].join(" ")}>
                 <span>{payerName || ""}</span>
             </div>
             <div

@@ -18,19 +18,9 @@ export async function loader({ params }: TransEditProps ): Promise<TransEditLoad
     return { transaction };
 }
 
-export default function TransEdit() {
+export default function TransDetail() {
     const navigate = useNavigate();
     const { transaction } = useLoaderData() as TransEditLoaderData;
-    
-    const onSubmit = (partialTransaction: PartialTransaction) => {
-        if (transaction) {
-            updateTransaction(
-                transaction.id,
-                partialTransaction
-            );
-            navigate(-1);
-        }
-    };
 
     const onCancel = () => {
         navigate(-1);
@@ -39,9 +29,9 @@ export default function TransEdit() {
     return (
         <>
             <TransForm 
-                title="Edit Transaction"
+                title="Transaction Detail"
                 initialValue={transaction}
-                onSubmit={onSubmit}
+                readonly
                 onCancel={onCancel}
             />
         </>

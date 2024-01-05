@@ -30,7 +30,7 @@ export default function PayeeSelect({ index, value, onChange, onClose }: PayeeSe
         >
             <div
                 className={[
-                    "peer w-fit min-w-[80px] max-w-[220px] h-[44px] p-2 border-2 rounded-lg text-center transition-all",
+                    "peer w-fit min-w-[80px] max-w-[220px] h-[44px] p-2 border-2 rounded-lg transition-all",
                     "dark:border-gray-500",
                     "hover:scale-105",
                 ].join(" ")}

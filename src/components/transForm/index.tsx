@@ -10,6 +10,7 @@ import Person from "../../interfaces/interfacePerson";
 import { updateTransaction } from "../../data/transactions";
 
 interface TransFormProps {
+    title?: string,
     initialValue?: Transaction,
     readonly?: boolean,
     onSubmit?: (trans: PartialTransaction) => void,
@@ -17,7 +18,7 @@ interface TransFormProps {
 }
 
 export default function TransForm({
-    initialValue, readonly, onSubmit, onCancel
+    title, initialValue, readonly, onSubmit, onCancel
 }: TransFormProps) {
     const [amount, setAmount] = useState(initialValue ? initialValue.amount : undefined);
     const [desc, setDesc] = useState(initialValue ? initialValue.desc : '');
@@ -65,14 +66,18 @@ export default function TransForm({
         ].join(" ")}
         >
             <div className="w-full px-2 flex">
-                <h1 className="text-xl font-medium dark:text-gray-100">Add a New Transaction</h1>
+                <h1 className="text-xl font-medium dark:text-gray-100">{title}</h1>
                 <span className="flex-auto"/>
                 <div className="flex gap-4">
-                    <Button
-                        onClick={handleSubmitButton}
-                    >
-                        Submit
-                    </Button>
+                    {
+                        readonly ? <></> :
+                        <Button
+                            onClick={handleSubmitButton}
+                        >
+                            Submit
+                        </Button>
+
+                    }
                     <Button
                         onClick={handleCancelButton}
                     >
@@ -85,33 +90,52 @@ export default function TransForm({
                     <span className="font-bold">
                         Description
                     </span>
-                    <input 
-                        name="desc"
-                        type="text"
-                        className={[
-                            "bg-[white] w-full p-2 rounded-lg border-2",
-                            "dark:bg-gray-800"
-                        ].join(" ")}
-                        aria-label="description"
-                        placeholder="Add a description"
-                        value={desc}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            setDesc(event.target?.value)
-                        }}
-                    />
+                    {
+                        readonly ? 
+                        <span
+                            className={[
+                                "bg-[white] w-full p-2 rounded-lg border-2",
+                                "dark:bg-gray-800"
+                            ].join(" ")}
+                        >
+                            {desc}
+                        </span> :
+                        <input 
+                            name="desc"
+                            type="text"
+                            className={[
+                                "bg-[white] w-full p-2 rounded-lg border-2",
+                                "dark:bg-gray-800"
+                            ].join(" ")}
+                            aria-label="description"
+                            placeholder="Add a description"
+                            value={desc}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setDesc(event.target?.value)
+                            }}
+                        />
+                    }
                 </div>
                 <div className="w-full flex justify-between">
                     <div className="flex items-center gap-4">
                         <span className="font-bold">
                             Payer
                         </span>
-                        <Select 
-                            className="p-2 rounded-lg border-2"
-                            selectedIndex={getPersons().findIndex(p => p.id == payerId)}
-                            options={getPersons().map(p => p.name)}
-                            aria-label="payer"
-                            onChange={(index: number) => setPayerId(getPersons()[index].id)}
-                        />
+                        {
+                            readonly ? 
+                            <span
+                                className="p-2 rounded-lg border-2"
+                            >
+                                {getPerson(payerId)?.name}
+                            </span> :
+                            <Select 
+                                className="p-2 rounded-lg border-2"
+                                selectedIndex={getPersons().findIndex(p => p.id == payerId)}
+                                options={getPersons().map(p => p.name)}
+                                aria-label="payer"
+                                onChange={(index: number) => setPayerId(getPersons()[index].id)}
+                            />
+                        }
                     </div>
                     <div className="flex items-center gap-4">
                         <span className="font-bold">
@@ -119,21 +143,31 @@ export default function TransForm({
                         </span>
                         <div className="p-2 rounded-lg border-2">
                             <span>$</span>
-                            <input 
-                                name="amount"
-                                type="number"
-                                step="0.01"
-                                className={[
-                                    "bg-[white] text-right",
-                                    "dark:bg-gray-800"
-                                ].join(" ")}
-                                aria-label="amount"
-                                value={amount}
-                                placeholder="0.00"
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    setAmount(parseFloat(event.target?.value));
-                                }}
-                            />
+                            {
+                                readonly ? 
+                                <span
+                                    className={[
+                                        "bg-[white] text-right",
+                                        "dark:bg-gray-800"
+                                    ].join(" ")}>
+                                    {amount?.toFixed(2)}
+                                </span> :
+                                <input 
+                                    name="amount"
+                                    type="number"
+                                    step="0.01"
+                                    className={[
+                                        "bg-[white] text-right",
+                                        "dark:bg-gray-800"
+                                    ].join(" ")}
+                                    aria-label="amount"
+                                    value={amount}
+                                    placeholder="0.00"
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setAmount(parseFloat(event.target?.value));
+                                    }}
+                                />
+                            }
                         </div>
                     </div>
                 </div>
@@ -147,6 +181,10 @@ export default function TransForm({
                         ].join(" ")}
                     >
                         {payeeIds.map((pid, i) => (
+                            readonly ? 
+                            <span>
+                                {getPerson(pid)?.name}
+                            </span> :
                             <PayeeSelect 
                                 key={i}
                                 index={i}
@@ -155,13 +193,17 @@ export default function TransForm({
                                 onChange={handlePayeeChange}
                             />
                         ))}
-                        <CircleButton
-                            id="add-person-button"
-                            className="w-[40px] h-[40px] p-2 flex justify-center items-center"
-                            onClick={handleAddPayeeButton}
-                        >
-                            <FaPlus />
-                        </CircleButton>
+
+                        {
+                            readonly ? <></> :
+                            <CircleButton
+                                id="add-person-button"
+                                className="w-[40px] h-[40px] p-2 flex justify-center items-center"
+                                onClick={handleAddPayeeButton}
+                            >
+                                <FaPlus />
+                            </CircleButton>
+                        }
                     </div>
                 </div>
             </div>

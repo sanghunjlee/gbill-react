@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import Transaction from "../../interfaces/interfaceTransaction";
@@ -8,10 +8,15 @@ import { getPerson, getPersons } from "../../data/persons";
 import Button from "../../components/buttons/button";
 import TransItem from "../../components/transItem";
 import ErrorMessage from "../../components/errorMessage";
+import { DataContext } from "../../contexts/pageContext";
 
-export default function Trans() {
+interface TransProps {
+    onTransChange?: VoidFunction
+}
+
+export default function Trans({onTransChange}: TransProps) {
     const navigate = useNavigate();
-    const [transaction, setTransaction] = useState<Transaction[]>(getTransactions());
+    const {transactions, setTransactions} = useContext(DataContext);
     const [errorText, setErrorText] = useState("");
     const [showError, setShowError] = useState(false);
 
@@ -35,7 +40,7 @@ export default function Trans() {
             raiseError("There is nothing to clear!")
         } else {
             deleteAllTransactions();
-            setTransaction(getTransactions());
+            setTransactions?.(getTransactions());
         }
     }
 
@@ -84,20 +89,22 @@ export default function Trans() {
                     amount={"Amount"}
                     isHeader
                 />
-                {transaction.map((t, i) => (
-                    <TransItem 
-                        key={i} 
-                        id={t.id}
-                        index={i.toString()}
-                        desc={t.desc}
-                        payerName={getPerson(t.payerId)?.name || ""}
-                        amount={"$" + t.amount.toFixed(2)}
-                    />
+                {transactions?.map((t, i) => (
+                    <Link to={`/gbill-react/trans/detail/${t.id}`}>
+                        <TransItem 
+                            key={i} 
+                            id={t.id}
+                            index={i.toString()}
+                            desc={t.desc}
+                            payerName={getPerson(t.payerId)?.name || ""}
+                            amount={"$" + t.amount.toFixed(2)}
+                        />
+                    </Link>
                 ))}
                 <div className={[
                     "w-full flex gap-2 px-4 py-2 font-bold",
                     "dark:text-gray-100",
-                    transaction.length > 0 ? "" : "hidden",
+                    transactions && transactions.length > 0 ? "" : "hidden",
                 ].join(" ")}
                 >
                     <span className="flex-auto"/>
@@ -105,7 +112,7 @@ export default function Trans() {
                         <span>Total Amount:</span>
                     </div>
                     <div className="text-right mr-[80px] ">
-                        <span>${transaction.map(t => t.amount).reduce((p,c) => p+c, 0).toFixed(2)}</span>
+                        <span>${transactions?.map(t => t.amount).reduce((p,c) => p+c, 0).toFixed(2)}</span>
                     </div>
                 </div>
             </div>

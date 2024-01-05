@@ -13,6 +13,7 @@ import Error from './pages/error'
 import Trans from './pages/trans';
 import TransAdd from './pages/trans/add';
 import TransEdit, {loader as transEditLoader} from './pages/trans/edit';
+import TransDetail, {loader as transDetailLoader} from './pages/trans/detail';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,11 @@ const router = createBrowserRouter([
       {
         path: "trans/add",
         element: <TransAdd />,
+      },
+      {
+        path: "trans/detail/:transId",
+        element: <TransDetail />,
+        loader: transDetailLoader
       },
       {
         path: "trans/edit/:transId",

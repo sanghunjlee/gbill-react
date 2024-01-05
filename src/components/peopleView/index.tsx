@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { FaPlus } from "react-icons/fa";
 
@@ -8,11 +8,13 @@ import CircleButton from "../buttons/circleButton";
 import Button from "../buttons/button";
 import { createPerson, deleteAllPersons, deletePerson, getPersons, updatePerson } from "../../data/persons";
 import ErrorMessage from "../errorMessage";
+import { DataContext } from "../../contexts/pageContext";
+
 
 export default function PeopleView() {
     const [errorText, setErrorText] = useState("");
     const [showError, setShowError] = useState(false);
-    const [persons, setPersons] = useState<Person[]>(getPersons())
+    const {persons, setPersons} = useContext(DataContext);
 
     const raiseError = (msg: string) => {
         setErrorText(msg);
@@ -21,29 +23,29 @@ export default function PeopleView() {
 
     const handleClose = (person: Person) => {
         deletePerson(person.id);
-        setPersons(getPersons());
+        setPersons?.(getPersons());
     }
 
     const handleChange = (person: Person, newPersonName: string) => {
         updatePerson(person.id, {name: newPersonName});
-        setPersons(getPersons());
+        setPersons?.(getPersons());
     }
 
     const handleAddButton = (e: React.SyntheticEvent) => {
         createPerson({ name: ""});
-        setPersons(getPersons());
+        setPersons?.(getPersons());
     }
 
     const handleClearClick =(e: React.SyntheticEvent) => {
-        if (persons.length === 0) {
+        if (persons && persons.length === 0) {
             raiseError("There is nothing to clear!")
         } else {
             deleteAllPersons();
-            setPersons(getPersons());
+            setPersons?.(getPersons());
         }
     }
 
-    const personEntries = persons.map((p) => (
+    const personEntries = persons?.map((p) => (
         <PersonEntry 
             key={p.id}
             person={p}

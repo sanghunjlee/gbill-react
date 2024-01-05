@@ -30,6 +30,7 @@ export default function TransAdd() {
     return (
         <>
             <TransForm 
+                title="Add a New Transaction"
                 onSubmit={onSubmit}
                 onCancel={onCancel}
             />

@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, ParamParseKey, Params, RouteObject, useLoaderData, useNavigate } from "react-router-dom";
-import { getTransaction, updateTransaction } from "../../../data/transactions";
-import Transaction, { PartialTransaction } from "../../../interfaces/interfaceTransaction";
-import TransForm from "../../../components/transForm";
+import { getTransaction, updateTransaction } from "@src/data/transactions";
+import Transaction, { PartialTransaction } from "@src/interfaces/interfaceTransaction";
+import TransForm from "@src/components/transForm";
 
 interface TransEditProps extends LoaderFunctionArgs {
     params: {

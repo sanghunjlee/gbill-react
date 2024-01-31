@@ -2,13 +2,12 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import Transaction from "../../interfaces/interfaceTransaction";
-import { deleteAllTransactions, getTransactions } from "../../data/transactions";
-import { getPerson, getPersons } from "../../data/persons";
-import Button from "../../components/buttons/button";
-import TransItem from "../../components/transItem";
-import ErrorMessage from "../../components/errorMessage";
-import { DataContext } from "../../contexts/pageContext";
+import { deleteAllTransactions, getTransactions } from "@src/data/transactions";
+import { getPerson, getPersons } from "@src/data/persons";
+import Button from "@src/components/buttons/button";
+import TransItem from "@src/components/transItem";
+import ErrorMessage from "@src/components/errorMessage";
+import { DataContext } from "@src/contexts/pageContext";
 
 interface TransProps {
     onTransChange?: VoidFunction

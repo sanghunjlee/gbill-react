@@ -1,17 +1,9 @@
-import { Form, redirect, useNavigate } from "react-router-dom";
-import { getPerson, getPersons } from "../../../data/persons";
-import PersonEntry from "../../../components/peopleView/personEntry";
-import CircleButton from "../../../components/buttons/circleButton";
-import { FaPlus } from "react-icons/fa";
-import { useContext, useState } from "react";
-import Person from "../../../interfaces/interfacePerson";
-import Button from "../../../components/buttons/button";
-import PayeeSelect from "../../../components/payeeSelect";
-import { createTransaction } from "../../../data/transactions";
-import Select from "../../../components/select";
-import TransForm from "../../../components/transForm";
-import Transaction, { PartialTransaction } from "../../../interfaces/interfaceTransaction";
-import { DataContext } from "../../../contexts/pageContext";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { createTransaction } from "@src/data/transactions";
+import TransForm from "@src/components/transForm";
+import { PartialTransaction } from "@src/interfaces/interfaceTransaction";
+import { DataContext } from "@src/contexts/pageContext";
 
 
 export default function TransAdd() {

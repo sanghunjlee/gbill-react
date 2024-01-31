@@ -13,15 +13,16 @@ import Trans from './pages/trans';
 import TransAdd from './pages/trans/add';
 import TransEdit, {loader as transEditLoader} from './pages/trans/edit';
 import TransDetail, {loader as transDetailLoader} from './pages/trans/detail';
+import MainLayout from './layouts/mainLayout';
 
 const router = createBrowserRouter([
   {
-    path: "/gbill-react",
-    element: <App />,
+    element: <MainLayout />,
     errorElement: <Error />,
     children: [
-      { index: true, 
-        element: <Home />,
+      {
+        path: "/gbill-react",
+        element: <Home />
       },
       {
         path: "trans",
@@ -44,7 +45,6 @@ const router = createBrowserRouter([
       {
         path: "trans/delete/:transId"
       }
-
     ]
   },
 ])

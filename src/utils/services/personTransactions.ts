@@ -1,4 +1,4 @@
-import PersonTransaction from "../interfaces/interfacePersonTransaction";
+import PersonTransaction from "../../interfaces/interfacePersonTransaction";
 
 export function getPersonTransactions() {
     const storedItem = localStorage.getItem("personTransactions");

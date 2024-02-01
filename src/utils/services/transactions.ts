@@ -1,4 +1,4 @@
-import Transaction, { PartialTransaction } from "../interfaces/interfaceTransaction";
+import Transaction, { PartialTransaction } from "../../interfaces/interfaceTransaction";
 import { addPersonTransaction, deleteAllPersonTransactions, deletePersonTransaction, updateTrasnactionPersons } from "./personTransactions";
 
 export function getTransactions(): Transaction[] {

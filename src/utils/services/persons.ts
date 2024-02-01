@@ -1,4 +1,4 @@
-import Person from "../interfaces/interfacePerson";
+import Person from "../../interfaces/interfacePerson";
 import { getTransactionIds } from "./personTransactions";
 
 export function getPersons(): Person[] {

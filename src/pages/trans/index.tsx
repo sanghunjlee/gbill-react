@@ -2,12 +2,12 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { deleteAllTransactions, getTransactions } from "@src/data/transactions";
-import { getPerson, getPersons } from "@src/data/persons";
+import { deleteAllTransactions } from "@src/utils/services/transactions";
+import { getPerson, getPersons } from "@src/utils/services/persons";
 import Button from "@src/components/buttons/button";
-import TransItem from "@src/components/transItem";
+import TransItem from "@src/features/transItem";
 import ErrorMessage from "@src/components/errorMessage";
-import { DataContext } from "@src/contexts/pageContext";
+import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 
 interface TransProps {
     onTransChange?: VoidFunction
@@ -15,7 +15,7 @@ interface TransProps {
 
 export default function Trans({onTransChange}: TransProps) {
     const navigate = useNavigate();
-    const {transactions, updateTransactions} = useContext(DataContext);
+    const {transactions, reloadTransactions} = useContext(DataContext) as DataContextProps;
     const [errorText, setErrorText] = useState("");
     const [showError, setShowError] = useState(false);
 
@@ -39,7 +39,7 @@ export default function Trans({onTransChange}: TransProps) {
             raiseError("There is nothing to clear!")
         } else {
             deleteAllTransactions();
-            updateTransactions();
+            reloadTransactions();
         }
     }
 

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { FaMoon, FaSun } from "react-icons/fa";
+
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 interface ToggleButtonProps {
     label: string,
@@ -31,7 +33,7 @@ export default function ToggleButton(props: ToggleButtonProps) {
                         "peer-checked:translate-x-[30px] peer-checked:text-amber-500"
                     ].join(" ")}
                 >
-                    {isToggled ? <FaSun /> : <FaMoon />}
+                    {isToggled ? <LightModeIcon /> : <DarkModeIcon />}
                 </div>
                 <span 
                     className={[

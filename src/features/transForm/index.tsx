@@ -1,13 +1,13 @@
 import { useState } from "react";
 import Transaction, { PartialTransaction } from "../../interfaces/interfaceTransaction";
-import Button from "../buttons/button";
-import CircleButton from "../buttons/circleButton";
-import PayeeSelect from "../payeeSelect";
-import { getPerson, getPersons } from "../../data/persons";
-import Select from "../select";
-import { FaPlus } from "react-icons/fa";
+import Button from "../../components/buttons/button";
+import CircleButton from "../../components/buttons/circleButton";
+import PayeeSelect from "../../components/payeeSelect";
+import { getPerson, getPersons } from "../../utils/services/persons";
+import Select from "../../components/select";
 import Person from "../../interfaces/interfacePerson";
-import { updateTransaction } from "../../data/transactions";
+import { updateTransaction } from "../../utils/services/transactions";
+import AddIcon from '@mui/icons-material/Add';
 
 interface TransFormProps {
     title?: string,
@@ -201,7 +201,7 @@ export default function TransForm({
                                 className="w-[40px] h-[40px] p-2 flex justify-center items-center"
                                 onClick={handleAddPayeeButton}
                             >
-                                <FaPlus />
+                                <AddIcon />
                             </CircleButton>
                         }
                     </div>

@@ -1,6 +1,5 @@
 import { ComponentProps, useEffect, useRef, useState } from "react"
-import { FaAngleDown } from "react-icons/fa";
-
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 interface SelectProps extends Omit<ComponentProps<"div">, 'onChange'> {
     selectedIndex?: number
@@ -47,7 +46,7 @@ export default function Select({ className, selectedIndex, options, onChange }: 
                 >
                     <span>{options[index]}</span>
                 </div>
-                <span><FaAngleDown /></span>
+                <span><ArrowDropDownIcon /></span>
             </div>
             <div
                 className={[

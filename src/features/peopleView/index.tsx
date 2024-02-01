@@ -1,20 +1,20 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 
-import { FaPlus } from "react-icons/fa";
+import AddIcon from '@mui/icons-material/Add';
 
 import Person from "../../interfaces/interfacePerson";
 import PersonEntry from "./personEntry";
-import CircleButton from "../buttons/circleButton";
-import Button from "../buttons/button";
-import { createPerson, deleteAllPersons, deletePerson, getPersons, updatePerson } from "../../data/persons";
-import ErrorMessage from "../errorMessage";
-import { DataContext } from "../../contexts/pageContext";
+import CircleButton from "../../components/buttons/circleButton";
+import Button from "../../components/buttons/button";
+import { createPerson, deleteAllPersons, deletePerson, getPersons, updatePerson } from "../../utils/services/persons";
+import ErrorMessage from "../../components/errorMessage";
+import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 
 
 export default function PeopleView() {
     const [errorText, setErrorText] = useState("");
     const [showError, setShowError] = useState(false);
-    const {persons, updatePersons} = useContext(DataContext);
+    const {persons, reloadPersons} = useContext(DataContext) as DataContextProps;
 
     const raiseError = (msg: string) => {
         setErrorText(msg);
@@ -23,17 +23,17 @@ export default function PeopleView() {
 
     const handleClose = (person: Person) => {
         deletePerson(person.id);
-        updatePersons()
+        reloadPersons()
     }
 
     const handleChange = (person: Person, newPersonName: string) => {
         updatePerson(person.id, {name: newPersonName});
-        updatePersons()
+        reloadPersons()
     }
 
     const handleAddButton = (e: React.SyntheticEvent) => {
         createPerson({ name: ""});
-        updatePersons()
+        reloadPersons()
     }
 
     const handleClearClick =(e: React.SyntheticEvent) => {
@@ -41,7 +41,7 @@ export default function PeopleView() {
             raiseError("There is nothing to clear!")
         } else {
             deleteAllPersons();
-            updatePersons()
+            reloadPersons()
         }
     }
 
@@ -91,7 +91,7 @@ export default function PeopleView() {
                     className="w-[40px] h-[40px] p-2 flex justify-center items-center"
                     onClick={handleAddButton}
                 >
-                    <FaPlus />
+                    <AddIcon />
                 </CircleButton>
             </div>
         </div>

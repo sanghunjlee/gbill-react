@@ -1,9 +1,10 @@
 import { ComponentProps, useState } from "react";
 import Person from "../../interfaces/interfacePerson";
 import CircleButton from "../buttons/circleButton";
-import { FaXmark } from "react-icons/fa6";
 import Select from "../select";
-import { getPersons } from "../../data/persons";
+import { getPersons } from "../../utils/services/persons";
+
+import CloseIcon from '@mui/icons-material/Close';
 
 interface PayeeSelectProps {
     index: number,
@@ -50,7 +51,7 @@ export default function PayeeSelect({ index, value, onChange, onClose }: PayeeSe
                 ].join(" ")}
                 onClick={handleClose}
             >
-                <FaXmark className="text-white font-bold" />
+                <CloseIcon className="text-white font-bold" />
             </CircleButton>
         </div>
     );

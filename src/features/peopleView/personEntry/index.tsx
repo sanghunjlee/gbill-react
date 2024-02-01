@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaXmark } from "react-icons/fa6";
 import Person from "../../../interfaces/interfacePerson";
-import CircleButton from "../../buttons/circleButton";
+import CircleButton from "../../../components/buttons/circleButton";
+import CloseIcon from '@mui/icons-material/Close';
 
 interface PersonEntryProp {
     person: Person,
@@ -113,7 +113,7 @@ export default function PersonEntry({
                 ].join(" ")}
                 onClick={handleClose}
             >
-                <FaXmark className="text-white font-bold" />
+                <CloseIcon className="text-white font-bold" />
             </CircleButton>
         </div>
     );

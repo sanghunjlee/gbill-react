@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { getPersons } from "../../data/persons";
-import { getTransactions } from "../../data/transactions";
+import { getPersons } from "../../utils/services/persons";
+import { getTransactions } from "../../utils/services/transactions";
 import Transaction from "../../interfaces/interfaceTransaction";
 import Person from "../../interfaces/interfacePerson";
-import { DataContext } from "../../contexts/pageContext";
-import { send } from "process";
+import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 
 interface Payment {
     receiverId: string,
@@ -13,7 +12,7 @@ interface Payment {
 }
 
 export default function Invoice() {
-    const {persons, transactions} = useContext(DataContext);
+    const {persons, transactions} = useContext(DataContext) as DataContextProps;
 
     const getBalance = (person: Person) => {
         // Positive balance := this person is owed money from others

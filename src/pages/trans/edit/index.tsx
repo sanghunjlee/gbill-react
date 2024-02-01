@@ -1,9 +1,9 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, ParamParseKey, Params, RouteObject, useLoaderData, useNavigate } from "react-router-dom";
-import { getTransaction, updateTransaction } from "@src/data/transactions";
+import { getTransaction, updateTransaction } from "@src/utils/services/transactions";
 import Transaction, { PartialTransaction } from "@src/interfaces/interfaceTransaction";
-import TransForm from "@src/components/transForm";
+import TransForm from "@src/features/transForm";
 import { useContext } from "react";
-import { DataContext } from "@src/contexts/pageContext";
+import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 
 interface TransEditProps extends LoaderFunctionArgs {
     params: {
@@ -23,7 +23,7 @@ export async function loader({ params }: TransEditProps ): Promise<TransEditLoad
 export default function TransEdit() {
     const navigate = useNavigate();
     const { transaction } = useLoaderData() as TransEditLoaderData;
-    const { updateTransactions } = useContext(DataContext);
+    const { reloadTransactions } = useContext(DataContext) as DataContextProps;
     
     const onSubmit = (partialTransaction: PartialTransaction) => {
         if (transaction) {
@@ -31,7 +31,7 @@ export default function TransEdit() {
                 transaction.id,
                 partialTransaction
             );
-            updateTransactions();
+            reloadTransactions();
             navigate(-1);
         }
     };

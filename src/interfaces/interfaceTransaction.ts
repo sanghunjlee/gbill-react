@@ -1,5 +1,5 @@
 
-export default interface Transaction {
+export default interface ITransaction {
     type: 'transaction',
     id: string,
     index: number,
@@ -10,4 +10,4 @@ export default interface Transaction {
 }
 
 
-export interface PartialTransaction extends Pick<Transaction, 'desc' | 'amount' | 'payerId' | 'payeeIds'> {}
+export interface PartialTransaction extends Pick<ITransaction, 'desc' | 'amount' | 'payerId' | 'payeeIds'> {}

@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 import './index.css';
 
-import App from './pages/App';
 import Home from './pages/home'
 import Error from './pages/error'
 import Trans from './pages/trans';
@@ -17,11 +16,12 @@ import MainLayout from './layouts/mainLayout';
 
 const router = createBrowserRouter([
   {
+    path: "gbill-react",
     element: <MainLayout />,
     errorElement: <Error />,
     children: [
       {
-        path: "/gbill-react",
+        index: true,
         element: <Home />
       },
       {

@@ -1,5 +1,5 @@
 import React from "react";
-import ToggleButton from "../buttons/toggleButton";
+import ToggleButton from "../../components/buttons/toggleButton";
 import { Link } from "react-router-dom";
 
 export default function MenuBar() {

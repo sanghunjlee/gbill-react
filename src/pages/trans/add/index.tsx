@@ -1,20 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { createTransaction } from "@src/data/transactions";
-import TransForm from "@src/components/transForm";
+import { createTransaction } from "@src/utils/services/transactions";
+import TransForm from "@src/features/transForm";
 import { PartialTransaction } from "@src/interfaces/interfaceTransaction";
-import { DataContext } from "@src/contexts/pageContext";
+import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 
 
 export default function TransAdd() {
     const navigate = useNavigate();
-    const {updateTransactions} = useContext(DataContext);
+    const {reloadTransactions} = useContext(DataContext) as DataContextProps;
 
     const onSubmit = (transaction: PartialTransaction) => {
         createTransaction(
             transaction
         );
-        updateTransactions();
+        reloadTransactions();
         navigate(-1);
     };
 

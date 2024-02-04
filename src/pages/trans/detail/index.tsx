@@ -1,7 +1,8 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, ParamParseKey, Params, RouteObject, useLoaderData, useNavigate } from "react-router-dom";
-import { getTransaction, updateTransaction } from "@src/utils/services/transactions";
 import Transaction, { PartialTransaction } from "@src/interfaces/interfaceTransaction";
 import TransForm from "@src/features/transForm";
+import { useContext } from "react";
+import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 
 interface TransEditProps extends LoaderFunctionArgs {
     params: {
@@ -10,17 +11,17 @@ interface TransEditProps extends LoaderFunctionArgs {
 }
 
 interface TransEditLoaderData {
-    transaction?: Transaction
+    id?: string
 }
 
 export async function loader({ params }: TransEditProps ): Promise<TransEditLoaderData> {
-    const transaction: Transaction | undefined = params?.transId ? getTransaction(params?.transId) : undefined;
-    return { transaction };
+    return { id: params?.transId };
 }
 
 export default function TransDetail() {
     const navigate = useNavigate();
-    const { transaction } = useLoaderData() as TransEditLoaderData;
+    const { id } = useLoaderData() as TransEditLoaderData;
+    const {transactions} = useContext(DataContext) as DataContextProps;
 
     const onCancel = () => {
         navigate(-1);
@@ -30,7 +31,7 @@ export default function TransDetail() {
         <>
             <TransForm 
                 title="Transaction Detail"
-                initialValue={transaction}
+                initialValue={transactions.find(t => t.id === id)}
                 readonly
                 onCancel={onCancel}
             />

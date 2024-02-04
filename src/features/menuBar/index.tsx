@@ -1,16 +1,11 @@
-import React from "react";
+import { useState } from "react";
 import ToggleButton from "../../components/buttons/toggleButton";
 import { Link } from "react-router-dom";
+import { IconButton } from "@mui/material";
+
+import DarkModeSwitch from "./components/darkModeSwitch";
 
 export default function MenuBar() {
-    const handleThemeClick = (toggled: boolean) => {
-        const body = document.body;
-        if (toggled) {
-            body?.classList.remove("dark");
-        } else {
-            body?.classList.add("dark");
-        }
-    }
 
     return (
         <div
@@ -28,7 +23,7 @@ export default function MenuBar() {
             </Link>
             <span className="flex-auto" />
             <div className="flex items-center">
-                <ToggleButton label="Theme:" toggled={true} onClick={handleThemeClick}/>
+                <DarkModeSwitch />
             </div>
         </div>
     )

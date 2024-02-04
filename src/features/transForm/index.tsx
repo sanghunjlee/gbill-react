@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import Transaction, { PartialTransaction } from "../../interfaces/interfaceTransaction";
-import Button from "../../components/buttons/button";
 import CircleButton from "../../components/buttons/circleButton";
-import PayeeSelect from "../../components/payeeSelect";
-import { getPerson, getPersons } from "../../utils/services/persons";
-import Select from "../../components/select";
+import PersonSelect from "./components/personSelect";
 import Person from "../../interfaces/interfacePerson";
-import { updateTransaction } from "../../utils/services/transactions";
 import AddIcon from '@mui/icons-material/Add';
+import { Button, Switch } from "@mui/material";
+import TextField, {TextFieldProps} from "@mui/material/TextField";
+import { DataContext, DataContextProps } from "@src/contexts/dataContext";
+import NumberField from "@src/components/numberField";
+
 
 interface TransFormProps {
     title?: string,
@@ -18,12 +19,14 @@ interface TransFormProps {
 }
 
 export default function TransForm({
-    title, initialValue, readonly, onSubmit, onCancel
+    title, initialValue, readonly:_readonly, onSubmit, onCancel
 }: TransFormProps) {
+    const {persons} = useContext(DataContext) as DataContextProps;
     const [amount, setAmount] = useState(initialValue ? initialValue.amount : undefined);
     const [desc, setDesc] = useState(initialValue ? initialValue.desc : '');
-    const [payeeIds, setPayeeIds] = useState(initialValue ? initialValue.payeeIds : [getPersons()[0].id]);
-    const [payerId, setPayerId] = useState(initialValue ? initialValue.payerId : getPersons()[0].id);
+    const [payeeIds, setPayeeIds] = useState(initialValue ? initialValue.payeeIds : [persons[0].id]);
+    const [payerId, setPayerId] = useState(initialValue ? initialValue.payerId : persons[0].id);
+    const [readonly, setReadonly] = useState(_readonly || false);
 
     const handleSubmitButton = () => {
         const newTrans: PartialTransaction = {
@@ -39,6 +42,10 @@ export default function TransForm({
         if (onCancel) onCancel();
     }
 
+    const handleDescChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setDesc(event.target?.value);
+    }
+
     const handlePayeeClose = (index: number) => {
         const newPayeeIds = payeeIds.filter((_, i) => i !== index);
         setPayeeIds(newPayeeIds);
@@ -51,7 +58,7 @@ export default function TransForm({
     }
 
     const handleAddPayeeButton = () => {
-        const newPayeeId = getPersons()[0]?.id;
+        const newPayeeId = persons[0]?.id;
         console.log(newPayeeId);
         if (newPayeeId !== undefined) {
             const newPayeeIds = [...payeeIds, newPayeeId];
@@ -65,8 +72,21 @@ export default function TransForm({
             "dark:text-gray-100"
         ].join(" ")}
         >
-            <div className="w-full px-2 flex">
+            <div className="w-full px-2 flex gap-2">
                 <h1 className="text-xl font-medium dark:text-gray-100">{title}</h1>
+                {
+                    import.meta.env.DEV ? (
+                        <div className="relative w-[120px] rounded border-2">
+                            <div className="absolute left-0 right-0 top-[-1rem] text-center">
+                                <span className="px-2 bg-white text-xs">DEV ONLY</span>
+                            </div>
+                            <Switch
+                                value={readonly}
+                                onChange={() => setReadonly(!readonly)}
+                            />
+                        </div>
+                    ) : null
+                }
                 <span className="flex-auto"/>
                 <div className="flex gap-4">
                     {
@@ -74,7 +94,9 @@ export default function TransForm({
                         <Button
                             onClick={handleSubmitButton}
                         >
-                            Submit
+                            <span>
+                                Submit
+                            </span>
                         </Button>
 
                     }
@@ -87,58 +109,32 @@ export default function TransForm({
             </div>
             <div className="w-full px-2 flex flex-col gap-8">
                 <div className="flex items-center gap-4">
-                    <span className="font-bold">
-                        Description
-                    </span>
-                    {
-                        readonly ? 
-                        <span
-                            className={[
-                                "bg-[white] w-full p-2 rounded-lg border-2",
-                                "dark:bg-gray-800"
-                            ].join(" ")}
-                        >
-                            {desc}
-                        </span> :
-                        <input 
-                            name="desc"
-                            type="text"
-                            className={[
-                                "bg-[white] w-full p-2 rounded-lg border-2",
-                                "dark:bg-gray-800"
-                            ].join(" ")}
-                            aria-label="description"
-                            placeholder="Add a description"
-                            value={desc}
-                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                setDesc(event.target?.value)
-                            }}
-                        />
-                    }
+                    <TextField
+                        fullWidth
+                        value={desc}
+                        onChange={handleDescChange}
+                        label="Description"
+                        disabled={readonly}
+                        InputLabelProps={{
+                            shrink: readonly ? true : undefined
+                        }}
+                        InputProps={{
+                            readOnly: readonly,
+                            disabled: false
+                        }}
+                    />
                 </div>
                 <div className="w-full flex justify-between">
                     <div className="flex items-center gap-4">
-                        <span className="font-bold">
-                            Payer
-                        </span>
-                        {
-                            readonly ? 
-                            <span
-                                className="p-2 rounded-lg border-2"
-                            >
-                                {getPerson(payerId)?.name}
-                            </span> :
-                            <Select 
-                                className="p-2 rounded-lg border-2"
-                                selectedIndex={getPersons().findIndex(p => p.id == payerId)}
-                                options={getPersons().map(p => p.name)}
-                                aria-label="payer"
-                                onChange={(index: number) => setPayerId(getPersons()[index].id)}
-                            />
-                        }
+                        <PersonSelect 
+                            label="Payer"
+                            readonly={readonly}
+                        />
                     </div>
                     <div className="flex items-center gap-4">
-                        <span className="font-bold">
+                        <NumberField />
+                        
+                        {/* <span className="font-bold">
                             Amount
                         </span>
                         <div className="p-2 rounded-lg border-2">
@@ -168,7 +164,7 @@ export default function TransForm({
                                     }}
                                 />
                             }
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className="w-full flex flex-col gap-4 p-2 border-2 rounded-lg">
@@ -176,21 +172,18 @@ export default function TransForm({
                         Payee
                     </span>
                     <div className={[
-                        "w-full flex justify-center flex-wrap gap-2",
+                        "w-full flex justify-center items-center flex-wrap gap-2",
                         "dark:border-gray-500"
                         ].join(" ")}
                     >
                         {payeeIds.map((pid, i) => (
                             readonly ? 
                             <span>
-                                {getPerson(pid)?.name}
+                                {persons.find(p => p.id === pid)?.name}
                             </span> :
-                            <PayeeSelect 
+                            <PersonSelect 
                                 key={i}
-                                index={i}
-                                value={getPerson(pid)}
                                 onClose={() => handlePayeeClose(i)}
-                                onChange={handlePayeeChange}
                             />
                         ))}
 

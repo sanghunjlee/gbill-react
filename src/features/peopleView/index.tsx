@@ -6,7 +6,6 @@ import Person from "../../interfaces/interfacePerson";
 import PersonEntry from "./personEntry";
 import CircleButton from "../../components/buttons/circleButton";
 import Button from "../../components/buttons/button";
-import { createPerson, deleteAllPersons, deletePerson, getPersons, updatePerson } from "../../utils/services/persons";
 import ErrorMessage from "../../components/errorMessage";
 import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 
@@ -14,7 +13,7 @@ import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 export default function PeopleView() {
     const [errorText, setErrorText] = useState("");
     const [showError, setShowError] = useState(false);
-    const {persons, reloadPersons} = useContext(DataContext) as DataContextProps;
+    const {persons, createPerson, updatePerson} = useContext(DataContext) as DataContextProps;
 
     const raiseError = (msg: string) => {
         setErrorText(msg);
@@ -22,26 +21,22 @@ export default function PeopleView() {
     }
 
     const handleClose = (person: Person) => {
-        deletePerson(person.id);
-        reloadPersons()
+        //
     }
 
     const handleChange = (person: Person, newPersonName: string) => {
         updatePerson(person.id, {name: newPersonName});
-        reloadPersons()
     }
 
     const handleAddButton = (e: React.SyntheticEvent) => {
-        createPerson({ name: ""});
-        reloadPersons()
+        createPerson({name: ""});
     }
 
     const handleClearClick =(e: React.SyntheticEvent) => {
         if (persons && persons.length === 0) {
             raiseError("There is nothing to clear!")
         } else {
-            deleteAllPersons();
-            reloadPersons()
+            //
         }
     }
 

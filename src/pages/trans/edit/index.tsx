@@ -1,5 +1,4 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, ParamParseKey, Params, RouteObject, useLoaderData, useNavigate } from "react-router-dom";
-import { getTransaction, updateTransaction } from "@src/utils/services/transactions";
 import Transaction, { PartialTransaction } from "@src/interfaces/interfaceTransaction";
 import TransForm from "@src/features/transForm";
 import { useContext } from "react";
@@ -12,26 +11,24 @@ interface TransEditProps extends LoaderFunctionArgs {
 }
 
 interface TransEditLoaderData {
-    transaction?: Transaction
+    id?: string
 }
 
 export async function loader({ params }: TransEditProps ): Promise<TransEditLoaderData> {
-    const transaction: Transaction | undefined = params?.transId ? getTransaction(params?.transId) : undefined;
-    return { transaction };
+    return { id: params?.transId };
 }
 
 export default function TransEdit() {
     const navigate = useNavigate();
-    const { transaction } = useLoaderData() as TransEditLoaderData;
-    const { reloadTransactions } = useContext(DataContext) as DataContextProps;
+    const { id } = useLoaderData() as TransEditLoaderData;
+    const {transactions, updateTransaction} = useContext(DataContext) as DataContextProps;
     
     const onSubmit = (partialTransaction: PartialTransaction) => {
-        if (transaction) {
+        if (id) {
             updateTransaction(
-                transaction.id,
+                id,
                 partialTransaction
             );
-            reloadTransactions();
             navigate(-1);
         }
     };
@@ -44,7 +41,7 @@ export default function TransEdit() {
         <>
             <TransForm 
                 title="Edit Transaction"
-                initialValue={transaction}
+                initialValue={transactions.find(t => t.id === id)}
                 onSubmit={onSubmit}
                 onCancel={onCancel}
             />

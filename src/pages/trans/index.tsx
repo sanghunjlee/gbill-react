@@ -2,8 +2,6 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { deleteAllTransactions } from "@src/utils/services/transactions";
-import { getPerson, getPersons } from "@src/utils/services/persons";
 import Button from "@src/components/buttons/button";
 import TransItem from "@src/features/transItem";
 import ErrorMessage from "@src/components/errorMessage";
@@ -15,7 +13,7 @@ interface TransProps {
 
 export default function Trans({onTransChange}: TransProps) {
     const navigate = useNavigate();
-    const {transactions, reloadTransactions} = useContext(DataContext) as DataContextProps;
+    const {persons, transactions, deleteAllTransactions} = useContext(DataContext) as DataContextProps;
     const [errorText, setErrorText] = useState("");
     const [showError, setShowError] = useState(false);
 
@@ -25,7 +23,6 @@ export default function Trans({onTransChange}: TransProps) {
     }
 
     const handleAddButton = () => {
-        const persons = getPersons();
         if (persons.length > 1) {
             navigate(`/gbill-react/trans/add`);
         } else {
@@ -34,12 +31,10 @@ export default function Trans({onTransChange}: TransProps) {
     }
 
     const handleClearButton = () => {
-        const persons = getPersons();
         if (persons.length === 0) {
             raiseError("There is nothing to clear!")
         } else {
             deleteAllTransactions();
-            reloadTransactions();
         }
     }
 
@@ -95,7 +90,7 @@ export default function Trans({onTransChange}: TransProps) {
                             id={t.id}
                             index={i.toString()}
                             desc={t.desc}
-                            payerName={getPerson(t.payerId)?.name || ""}
+                            payerName={persons.find(p => p.id === t.payerId)?.name || ""}
                             amount={"$" + t.amount.toFixed(2)}
                         />
                     </Link>

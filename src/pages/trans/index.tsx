@@ -23,11 +23,7 @@ export default function Trans({onTransChange}: TransProps) {
     }
 
     const handleAddButton = () => {
-        if (persons.length > 1) {
-            navigate(`/gbill-react/trans/add`);
-        } else {
-            raiseError("You need more than 2 people to make a transaction!");
-        }
+        navigate(`/gbill-react/trans/add`);
     }
 
     const handleClearButton = () => {

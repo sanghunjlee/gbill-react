@@ -40,15 +40,6 @@ export default function PeopleView() {
         }
     }
 
-    const personEntries = persons?.map((p) => (
-        <PersonEntry 
-            key={p.id}
-            person={p}
-            onClose={handleClose}
-            onChange={handleChange}
-        />
-    ));
-
     return (
         <div className={[
                 "w-inherit m-2 p-2 flex flex-col items-center gap-2",
@@ -66,28 +57,26 @@ export default function PeopleView() {
                         setVisible={setShowError}
                     />
                 </div>
-                <div className="flex-1 flex justify-end">
-                    <Button
-                        className="px-4 py-2 text-sm font-bold"
-                        onClick={handleClearClick}
-                    >
-                        Clear
-                    </Button>
-                </div>
             </div>
             <div className={[
-                "w-full flex justify-center flex-wrap gap-2 p-2 border-2 rounded-lg",
+                "w-full min-h-16 flex justify-center items-center flex-wrap gap-2 p-2 border-2 rounded-lg",
                 "dark:border-gray-500"
                 ].join(" ")}
             >
-                {personEntries}
-                <CircleButton
-                    id="add-person-button"
-                    className="w-[40px] h-[40px] p-2 flex justify-center items-center"
-                    onClick={handleAddButton}
-                >
-                    <AddIcon />
-                </CircleButton>
+                {
+                    persons && persons.length > 0 ? (
+                        persons.map((p) => (
+                            <PersonEntry 
+                                key={p.id}
+                                person={p}
+                                onClose={handleClose}
+                                onChange={handleChange}
+                            />
+                        ))
+                    ) : (
+                        <span>Nothing to display</span>
+                    )
+                }
             </div>
         </div>
     )

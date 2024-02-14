@@ -1,13 +1,15 @@
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useContext, useState } from "react";
 import Transaction, { PartialTransaction } from "../../interfaces/interfaceTransaction";
 import CircleButton from "../../components/buttons/circleButton";
 import PersonSelect from "./components/personSelect";
-import Person from "../../interfaces/interfacePerson";
 import AddIcon from '@mui/icons-material/Add';
-import { Button, Switch } from "@mui/material";
+import { Button, IconButton, Switch } from "@mui/material";
 import TextField, {TextFieldProps} from "@mui/material/TextField";
 import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 import NumberField from "@src/components/numberField";
+import AddPersonButton from "./components/addPersonButton";
+import IPerson from "../../interfaces/interfacePerson";
+
 
 
 interface TransFormProps {
@@ -21,22 +23,24 @@ interface TransFormProps {
 export default function TransForm({
     title, initialValue, readonly:_readonly, onSubmit, onCancel
 }: TransFormProps) {
-    const {persons} = useContext(DataContext) as DataContextProps;
+    const {persons, createPerson} = useContext(DataContext) as DataContextProps;
     const [amount, setAmount] = useState(initialValue ? initialValue.amount : undefined);
     const [desc, setDesc] = useState(initialValue ? initialValue.desc : '');
-    const [payeeIds, setPayeeIds] = useState(initialValue ? initialValue.payeeIds : [persons[0].id]);
-    const [payerId, setPayerId] = useState(initialValue ? initialValue.payerId : persons[0].id);
+    const [payeeIds, setPayeeIds] = useState<string[]>(initialValue ? initialValue.payeeIds : []);
+    const [payerId, setPayerId] = useState(initialValue ? initialValue.payerId : null);
     const [readonly, setReadonly] = useState(_readonly || false);
 
     const handleSubmitButton = () => {
-        const newTrans: PartialTransaction = {
-            amount: amount ?? 0,
-            desc: desc !== '' ? desc : 'Untitled',
-            payeeIds,
-            payerId,
-        };
-
-        if (onSubmit) onSubmit(newTrans);
+        if (payerId && payeeIds.length > 0) {
+            const newTrans: PartialTransaction = {
+                amount: amount ?? 0,
+                desc: desc !== '' ? desc : 'Untitled',
+                payeeIds,
+                payerId,
+            };
+    
+            if (onSubmit) onSubmit(newTrans);
+        }
     }
     const handleCancelButton = () => {
         if (onCancel) onCancel();
@@ -45,25 +49,41 @@ export default function TransForm({
     const handleDescChange = (event: ChangeEvent<HTMLInputElement>) => {
         setDesc(event.target?.value);
     }
+    
+    const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setAmount(parseFloat(event.target?.value));
+    }
+
+    const handlePayerChange = (newPayer: IPerson) => {
+        if (newPayer.id === "") {
+            // New person
+            const newPerson = createPerson({name: newPayer.name});
+            setPayerId(newPerson.id);
+        } else {
+            setPayerId(newPayer.id);
+        }
+    }
 
     const handlePayeeClose = (index: number) => {
         const newPayeeIds = payeeIds.filter((_, i) => i !== index);
         setPayeeIds(newPayeeIds);
     }
 
-    const handlePayeeChange = (index: number, newPayee: Person) => {
-        const newPayeeIds = payeeIds.map((p, i) => i === index ? newPayee.id : p);
+    const handlePayeeChange = (index:number, newPayee: IPerson) => {
+        let newPayeeIds = payeeIds;
+        if (newPayee.id === "") {
+            // New person
+            const newPerson = createPerson({name: newPayee.name});
+            newPayeeIds[index] = newPerson.id;
+        } else {
+            newPayeeIds[index] = newPayee.id;
+        }
         console.log('payee changed:', newPayeeIds);
         setPayeeIds(newPayeeIds);
     }
 
-    const handleAddPayeeButton = () => {
-        const newPayeeId = persons[0]?.id;
-        console.log(newPayeeId);
-        if (newPayeeId !== undefined) {
-            const newPayeeIds = [...payeeIds, newPayeeId];
-            setPayeeIds(newPayeeIds);
-        }
+    const handleAddPerson = () => {
+        setPayeeIds([...payeeIds, ""]);
     }
 
     return (
@@ -129,10 +149,27 @@ export default function TransForm({
                         <PersonSelect 
                             label="Payer"
                             readonly={readonly}
+                            value={persons.find(p => p.id === payerId)}
+                            onChange={(newValue: IPerson|null) => {
+                                if (newValue) {
+                                    handlePayerChange(newValue);
+                                }
+                            }}
                         />
                     </div>
                     <div className="flex items-center gap-4">
-                        <NumberField />
+                        <NumberField 
+                            value={amount}
+                            onChange={handleAmountChange}
+                            disabled={readonly}
+                            InputLabelProps={{
+                                shrink: readonly ? true : undefined
+                            }}
+                            InputProps={{
+                                readOnly: readonly,
+                                disabled: false
+                            }}
+                        />
                         
                         {/* <span className="font-bold">
                             Amount
@@ -183,19 +220,23 @@ export default function TransForm({
                             </span> :
                             <PersonSelect 
                                 key={i}
+                                value={persons.find(p => p.id === pid)}
+                                onChange={(newValue: IPerson|null) => {
+                                    if (newValue) {
+                                        handlePayeeChange(i, newValue);
+                                    }
+                                }}
                                 onClose={() => handlePayeeClose(i)}
                             />
                         ))}
 
                         {
-                            readonly ? <></> :
-                            <CircleButton
-                                id="add-person-button"
-                                className="w-[40px] h-[40px] p-2 flex justify-center items-center"
-                                onClick={handleAddPayeeButton}
+                            readonly ? null :
+                            <IconButton
+                                onClick={handleAddPerson}
                             >
                                 <AddIcon />
-                            </CircleButton>
+                            </IconButton>
                         }
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 import IPerson from "@src/interfaces/interfacePerson";
 import ITransaction, { PartialTransaction } from "@src/interfaces/interfaceTransaction";
-import { ComponentProps, Context, createContext, useEffect, useState } from "react";
+import { ComponentProps, Context, createContext, useCallback, useEffect, useState } from "react";
 
 export interface DataContextProps {
     persons: IPerson[]
@@ -40,10 +40,11 @@ export default function DataProvider({children}: DataProviderProps) {
     }, [persons]);
 
     useEffect(() => {
+        cleanPersons();
         localStorage.setItem("transactions", JSON.stringify(transactions));
     }, [transactions])
 
-    const createPerson = ({name}: {name: string}) => {
+    const createPerson = useCallback(({name}: {name: string}) => {
         const newId = crypto.randomUUID();
         const newPerson: IPerson = {
             type: "person",
@@ -52,8 +53,8 @@ export default function DataProvider({children}: DataProviderProps) {
         };
         setPersons([...persons, newPerson]);
         return newPerson;
-    };
-    const updatePerson = (id: string, update: Partial<IPerson>) => {
+    }, [persons]);
+    const updatePerson = useCallback((id: string, update: Partial<IPerson>) => {
         let person = persons.find(p => p.id === id);
         if (person) {
             const newPerson = Object.assign(person, update);
@@ -64,15 +65,15 @@ export default function DataProvider({children}: DataProviderProps) {
             return true;
         }
         return false;
-    };
+    }, [persons]);
 
-    const cleanPersons = () => {
+    const cleanPersons = useCallback(() => {
         // Remove persons not related to any transaction
         const filtered = persons.filter(p => transactions.some(t => t.payeeIds.includes(p.id) || t.payerId === p.id));
         setPersons(filtered);
-    }
+    }, [persons, transactions]);
 
-    const createTransaction = ({
+    const createTransaction = useCallback(({
         payerId, payeeIds, desc, amount
     }:PartialTransaction) => {
         let newId = crypto.randomUUID()
@@ -88,9 +89,9 @@ export default function DataProvider({children}: DataProviderProps) {
         };
         setTransactions([...transactions, newTransaction]);
         return newTransaction;
-    }
+    }, [transactions]);
 
-    const updateTransaction = (id: string, update: Partial<ITransaction>) => {
+    const updateTransaction = useCallback((id: string, update: Partial<ITransaction>) => {
         let transaction = transactions.find(t => t.id === id);
         if (transaction) {
             const newTransaction = Object.assign(transaction, update);
@@ -98,12 +99,12 @@ export default function DataProvider({children}: DataProviderProps) {
                 ...transactions.filter(t => t.id !== id),
                 newTransaction
             ]);
-            return true;
+            return true
         }
         return false;
-    }
+    }, [transactions]);
 
-    const deleteTransaction = (id: string) => {
+    const deleteTransaction = useCallback((id: string) => {
         const index = transactions.findIndex(t => t.id === id);
         if (index > -1) {
             transactions.splice(index, 1);
@@ -112,7 +113,7 @@ export default function DataProvider({children}: DataProviderProps) {
             return true;
         }
         return false;
-    }
+    }, [transactions]);
 
     const deleteAllTransactions = () => {
         setTransactions([]);

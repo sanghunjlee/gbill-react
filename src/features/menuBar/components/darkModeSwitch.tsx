@@ -1,23 +1,15 @@
-import { useState } from "react";
-import { IconButton } from "@mui/material";
-
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { useContext } from "react";
+import { useTheme } from '@mui/material/styles';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import { ThemeContext, ThemeContextProps } from "@src/contexts/themeContext";
 
 export default function DarkModeSwitch() {
-    const [dark, setDark] = useState(false);
+    const {toggle} = useContext(ThemeContext) as ThemeContextProps;
+    const theme = useTheme();
 
     const handleDarkModeClick = () => {
-        const newValue = !dark;
-        const body = document.body;
-        if (newValue) {
-            body?.classList.add("dark");
-        } else {
-            body?.classList.remove("dark");
-        }
-        setDark(newValue);
+        toggle();
     }
 
     return (
@@ -26,7 +18,7 @@ export default function DarkModeSwitch() {
                 <input 
                     type="checkbox"
                     className="peer opacity-0 w-0 h-0"
-                    defaultChecked={dark}
+                    defaultChecked={theme.palette.mode === 'light'}
                     onClick={handleDarkModeClick}
                 />
                 <span 
@@ -41,7 +33,7 @@ export default function DarkModeSwitch() {
                         "peer-checked:translate-x-[30px] peer-checked:text-gray-400"
                     ].join(" ")}
                 >
-                    {dark ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
+                    {theme.palette.mode === 'dark' ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
                 </div>
             </label>
         </div>

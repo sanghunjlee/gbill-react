@@ -1,7 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { getPersons } from "../../utils/services/persons";
-import { getTransactions } from "../../utils/services/transactions";
-import Transaction from "../../interfaces/interfaceTransaction";
 import Person from "../../interfaces/interfacePerson";
 import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 
@@ -55,7 +52,7 @@ export default function Invoice() {
 
     return (
         <div className={[
-            "w-inherit m-2 p-2 flex flex-col items-center gap-2",
+            "w-inherit flex flex-col items-center gap-2",
         ].join(" ")}
     >
         <div className="w-full px-2">

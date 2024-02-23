@@ -42,7 +42,7 @@ export default function PeopleView() {
 
     return (
         <div className={[
-                "w-inherit m-2 p-2 flex flex-col items-center gap-2",
+                "w-inherit flex flex-col items-center gap-2",
             ].join(" ")}
         >
             <div className="w-full px-2">

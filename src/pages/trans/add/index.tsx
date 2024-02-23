@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import TransForm from "@src/features/transForm";
+import TransForm from "@src/features/transactions/components/transForm";
 import { PartialTransaction } from "@src/interfaces/interfaceTransaction";
 import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 

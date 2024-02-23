@@ -1,14 +1,14 @@
 import { ChangeEvent, SyntheticEvent, useContext, useState } from "react";
-import Transaction, { PartialTransaction } from "../../interfaces/interfaceTransaction";
-import CircleButton from "../../components/buttons/circleButton";
-import PersonSelect from "./components/personSelect";
+import Transaction, { PartialTransaction } from "../../../interfaces/interfaceTransaction";
+import CircleButton from "../../../components/buttons/circleButton";
+import PersonSelect from "./personSelect";
 import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton, Switch } from "@mui/material";
 import TextField, {TextFieldProps} from "@mui/material/TextField";
 import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 import NumberField from "@src/components/numberField";
-import AddPersonButton from "./components/addPersonButton";
-import IPerson from "../../interfaces/interfacePerson";
+import AddPersonButton from "./addPersonButton";
+import IPerson from "../../../interfaces/interfacePerson";
 
 
 

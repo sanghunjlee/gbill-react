@@ -1,6 +1,6 @@
 import IPerson from "@src/interfaces/interfacePerson";
 import ITransaction, { PartialTransaction } from "@src/interfaces/interfaceTransaction";
-import { ComponentProps, Context, createContext, useCallback, useEffect, useState } from "react";
+import { ComponentProps, Context, createContext, useCallback, useEffect, useReducer, useState } from "react";
 
 export interface DataContextProps {
     persons: IPerson[]
@@ -9,15 +9,74 @@ export interface DataContextProps {
     updatePerson: (id: string, update: Partial<IPerson>) => boolean
     cleanPersons: VoidFunction
     createTransaction: ({}: PartialTransaction) => ITransaction
-    updateTransaction: (id: string, update: Partial<ITransaction>) => boolean
-    deleteTransaction: (id: string) => boolean
+    updateTransaction: (id: string, update: Partial<ITransaction>) => void
+    deleteTransaction: (id: string) => void
     deleteAllTransactions: VoidFunction
 }
 
 export const DataContext: Context<DataContextProps|null> = createContext<DataContextProps|null>(null);
 
-interface DataProviderProps extends Pick<ComponentProps<"div">, "children"> {}
+type ReducerActionType<T> = {
+    type: "create"|"update"|"delete"|"clear",
+    args?: T|Partial<T>
+}
 
+function transactionsReducer(state: ITransaction[], action: ReducerActionType<ITransaction>) {
+    switch (action.type) {
+        case "create":
+            if (action.args) {
+                if (action.args.type && action.args.type === 'transaction') {
+                    const newTransaction = action.args as ITransaction;
+                    const newTransactions = [...state, newTransaction].sort((a,b) => a.index - b.index);
+                    localStorage.setItem("transactions", JSON.stringify(newTransactions));
+                    return newTransactions;
+                }
+            }
+            throw Error(`No args provided for "create" action.`);
+        case "update":
+            if (action.args) {
+                const { id, ...update } = action.args;
+                let transaction = state.find(t => t.id === id);
+                if (transaction) {
+                    const newTransaction = Object.assign(transaction, update);
+                    const newTransactions = [
+                        ...state.filter(t => t.id !== id),
+                        newTransaction
+                    ].sort((a,b) => a.index - b.index);
+
+                    localStorage.setItem("transactions", JSON.stringify(newTransactions));
+                    return newTransactions;
+                }
+                throw Error(`No transaction to update. ${id}`);
+            }
+            throw Error(`No arges provided for "update" action.`);
+        case "delete":
+            if (action.args) {
+                const { id } = action.args;
+                const index = state.findIndex(t => t.id === id);
+                if (index > -1) {
+                    let newTransactions = state.filter(t => t.id !== id);
+                    newTransactions.forEach((t,i) => t.index = i);
+                    
+                    localStorage.setItem("transactions", JSON.stringify(newTransactions));
+                    return newTransactions;
+                }
+                throw Error(`No transaction to delete. ${id}`);
+            }
+            throw Error(`No arges provided for "delete" action.`);
+        case "clear":
+            return [];
+    }
+    throw Error(`Unknown action: ${action.type}`);
+}
+
+function transactionsInit() {
+    const stored = localStorage.getItem("transactions");
+    const loaded = stored ? JSON.parse(stored) : [];
+    return Array.isArray(loaded) ? loaded.map(data => data as ITransaction) : [];
+}
+
+interface DataProviderProps extends Pick<ComponentProps<"div">, "children"> {}
 
 export default function DataProvider({children}: DataProviderProps) {
     const [persons, setPersons] = useState<IPerson[]>(() => {
@@ -27,22 +86,11 @@ export default function DataProvider({children}: DataProviderProps) {
             loaded.map(data => data as IPerson) :
             [];
     });
-    const [transactions, setTransactions] = useState<ITransaction[]>(() => {
-        const stored = localStorage.getItem("transactions");
-        const loaded = stored ? JSON.parse(stored) : [];
-        return Array.isArray(loaded) ? 
-            loaded.map(data => data as ITransaction) :
-            [];
-    });
+    const [transactions, dispatchTransactions] = useReducer(transactionsReducer, null, transactionsInit); 
 
     useEffect(() => {
         localStorage.setItem("persons", JSON.stringify(persons));
     }, [persons]);
-
-    useEffect(() => {
-        cleanPersons();
-        localStorage.setItem("transactions", JSON.stringify(transactions));
-    }, [transactions])
 
     const createPerson = useCallback(({name}: {name: string}) => {
         const newId = crypto.randomUUID();
@@ -73,7 +121,7 @@ export default function DataProvider({children}: DataProviderProps) {
         setPersons(filtered);
     }, [persons, transactions]);
 
-    const createTransaction = useCallback(({
+    const createTransaction = ({
         payerId, payeeIds, desc, amount
     }:PartialTransaction) => {
         let newId = crypto.randomUUID()
@@ -87,36 +135,34 @@ export default function DataProvider({children}: DataProviderProps) {
             desc,
             amount
         };
-        setTransactions([...transactions, newTransaction]);
+        dispatchTransactions({
+            type: "create",
+            args: newTransaction
+        });
         return newTransaction;
-    }, [transactions]);
+    };
 
-    const updateTransaction = useCallback((id: string, update: Partial<ITransaction>) => {
-        let transaction = transactions.find(t => t.id === id);
-        if (transaction) {
-            const newTransaction = Object.assign(transaction, update);
-            setTransactions([
-                ...transactions.filter(t => t.id !== id),
-                newTransaction
-            ]);
-            return true
-        }
-        return false;
-    }, [transactions]);
+    const updateTransaction = (id: string, update: Partial<ITransaction>) => {
+        dispatchTransactions({
+            type: "update",
+            args: {
+                id,
+                ...update
+            }
+        });
+    };
 
-    const deleteTransaction = useCallback((id: string) => {
-        const index = transactions.findIndex(t => t.id === id);
-        if (index > -1) {
-            transactions.splice(index, 1);
-            transactions.forEach((t,i) => t.index = i);
-            setTransactions(transactions);
-            return true;
-        }
-        return false;
-    }, [transactions]);
+    const deleteTransaction = (id: string) => {
+        dispatchTransactions({
+            type: "delete",
+            args: { id }
+        })
+    };
 
     const deleteAllTransactions = () => {
-        setTransactions([]);
+        dispatchTransactions({
+            type: "clear"
+        })
     }
 
     return (
@@ -139,5 +185,6 @@ export default function DataProvider({children}: DataProviderProps) {
 }
 
 function generateNewIndex(arr: ITransaction[]): number {
+    if (!arr || arr.length === 0) return 0;
     return Math.max(...arr.map(t => t.index)) + 1;
 }

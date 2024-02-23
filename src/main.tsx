@@ -6,13 +6,14 @@ import {
 } from "react-router-dom";
 import './index.css';
 
-import Home from './pages/home'
+import HomePage from './pages/home'
 import Error from './pages/error'
 import Trans from './pages/trans';
 import TransAdd from './pages/trans/add';
 import TransEdit, {loader as transEditLoader} from './pages/trans/edit';
 import TransDetail, {loader as transDetailLoader} from './pages/trans/detail';
 import MainLayout from './layouts/mainLayout';
+import TransLayout from './layouts/transLayout';
 
 const router = createBrowserRouter([
   {
@@ -22,29 +23,35 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />
+        element: <HomePage />
       },
       {
         path: "trans",
-        element: <Trans />,
+        element: <TransLayout />,
+        children: [
+          {
+            index: true,
+            element: <Trans />,
+          },
+          {
+            path: "add",
+            element: <TransAdd />,
+          },
+          {
+            path: "detail/:transId",
+            element: <TransDetail />,
+            loader: transDetailLoader
+          },
+          {
+            path: "edit/:transId",
+            element: <TransEdit />,
+            loader: transEditLoader
+          },
+          {
+            path: "delete/:transId"
+          }
+        ]
       },
-      {
-        path: "trans/add",
-        element: <TransAdd />,
-      },
-      {
-        path: "trans/detail/:transId",
-        element: <TransDetail />,
-        loader: transDetailLoader
-      },
-      {
-        path: "trans/edit/:transId",
-        element: <TransEdit />,
-        loader: transEditLoader
-      },
-      {
-        path: "trans/delete/:transId"
-      }
     ]
   },
 ])

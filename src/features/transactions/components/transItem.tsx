@@ -5,18 +5,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 import { IconButton } from "@mui/material";
+import ITransaction from "@src/interfaces/interfaceTransaction";
 
-interface TransItemProps {
-    id?: string,
-    index?: string|number,
-    desc?: string,
-    payerName?: string,
-    amount?: string|number,
+interface TransItemProps extends Partial<ITransaction> {
     isHeader?: boolean
 }
 
-export default function TransItem({id, index, desc, payerName, amount, isHeader}: TransItemProps) {
-    const { deleteTransaction } = useContext(DataContext) as DataContextProps;
+export default function TransItem({
+    id, index, desc, payerId, amount, isHeader
+}: TransItemProps) {
+    const { persons, deleteTransaction } = useContext(DataContext) as DataContextProps;
 
     const handleDelete = () => {
         if (id && !isHeader) {
@@ -43,7 +41,7 @@ export default function TransItem({id, index, desc, payerName, amount, isHeader}
                 "w-1/4 text-center",
                 "hidden sm:block",
             ].join(" ")}>
-                <span>{payerName || ""}</span>
+                <span>{persons.find(p => p.id === payerId)?.name || ""}</span>
             </div>
             <div
                 className={[
@@ -56,8 +54,12 @@ export default function TransItem({id, index, desc, payerName, amount, isHeader}
                 {
                     isHeader ? <>
                     </> : <>
-                        <Link to={`/gbill-react/trans/edit/${id}`} className="transition hover:scale-110">
-                            <EditIcon />
+                        <Link to={`/gbill-react/trans/edit/${id}`}>
+                            <IconButton
+                                size="small"
+                            >
+                                <EditIcon fontSize="inherit"/>
+                            </IconButton>
                         </Link>
                         <IconButton
                             size="small"

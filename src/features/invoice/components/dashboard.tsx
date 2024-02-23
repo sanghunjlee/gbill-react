@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import Person from "../../interfaces/interfacePerson";
+import Person from "../../../interfaces/interfacePerson";
 import { DataContext, DataContextProps } from "@src/contexts/dataContext";
+import PersonBox from "./personBox";
+import { List, ListItem, ListItemButton } from "@mui/material";
 
 interface Payment {
     receiverId: string,
@@ -8,7 +10,7 @@ interface Payment {
     amount: number
 }
 
-export default function Invoice() {
+export default function Dashboard() {
     const {persons, transactions} = useContext(DataContext) as DataContextProps;
 
     const getBalance = (person: Person) => {
@@ -73,41 +75,35 @@ export default function Invoice() {
             </div>
             <div className="flex flex-col gap-1">
                 <h3 className="text-lg font-medium">Payments</h3>
-                {
-                    payments.map((p, i) => 
-                        <div 
-                            key={i}
-                            className={[
-                                "w-full flex items-center border-2 rounded-lg p-2 gap-2"
-                            ].join(" ")}
-                        >
-                            <div className="flex-1 flex justify-center">
-                                <div className="border-2 rounded-lg p-2">
+                <List 
+                    disablePadding
+                >
+                    {
+                        payments.map((p, i) => 
+                            <ListItem 
+                                key={i}
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: "0.5rem"
+                                }}
+                            >
+                                <PersonBox name={persons.find(_p => _p.id === p.senderId)?.name}/>
+                                <div className="relative flex-[2_1_0%]">
+                                    <div className="absolute left-0 right-0 h-1 z-10 rounded-lg bg-gray-300" />
+                                    <div className="absolute h-1 w-4 right-0 rounded-lg bg-gray-300 origin-right rotate-[30deg] translate-y-[1px]" />
+                                    <div className="absolute h-1 w-4 right-0 rounded-lg bg-gray-300 origin-right -rotate-[30deg] translate-y-[-1px]" />
+                                </div>
+                                <PersonBox name={persons.find(_p => _p.id === p.receiverId)?.name} />
+                                <div className="flex-1 flex justify-center">
                                     <span>
-                                        {persons.find(_p => _p.id === p.senderId)?.name} 
+                                        ${p.amount.toFixed(2)}
                                     </span>
                                 </div>
-                            </div>
-                            <div className="relative flex-[2_1_0%]">
-                                <div className="absolute left-0 right-0 h-1 z-10 rounded-lg bg-gray-300" />
-                                <div className="absolute h-1 w-4 right-0 rounded-lg bg-gray-300 origin-right rotate-[30deg] translate-y-[1px]" />
-                                <div className="absolute h-1 w-4 right-0 rounded-lg bg-gray-300 origin-right -rotate-[30deg] translate-y-[-1px]" />
-                            </div>
-                            <div className="flex-1 flex justify-center">
-                                <div className="border-2 rounded-lg p-2">
-                                    <span>
-                                        {persons.find(_p => _p.id === p.receiverId)?.name}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="flex-1 flex justify-center">
-                                <span>
-                                    ${p.amount.toFixed(2)}
-                                </span>
-                            </div>
-                        </div>
-                    )
-                }
+                            </ListItem>
+                        )
+                    }
+                </List>
             </div>
         </div>
     </div>

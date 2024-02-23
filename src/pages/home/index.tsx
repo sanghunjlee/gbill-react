@@ -1,6 +1,4 @@
-import Trans from "../trans";
-import PeopleView from "@src/features/peopleView";
-import Invoice from "@src/features/invoice";
+import Dashboard from "@src/features/invoice/components/dashboard";
 import { useContext, useEffect } from "react";
 import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 import { useNavigate } from "react-router-dom";
@@ -10,11 +8,7 @@ import TransItem from "@src/features/transactions/components/transItem";
 
 export default function HomePage() {
     const navigate = useNavigate();
-    const {transactions, deleteAllTransactions, cleanPersons} = useContext(DataContext) as DataContextProps;
-
-    useEffect(() => {
-        cleanPersons();
-    }, [transactions])
+    const {transactions, deleteAllTransactions} = useContext(DataContext) as DataContextProps;
 
     const handleAddTransaction = () => {
         navigate("trans/add");
@@ -50,14 +44,7 @@ export default function HomePage() {
                     </div>
                     {
                         transactions && transactions.length > 0 ? (
-                            <div className="w-full">
-                                <TransItem 
-                                    index={"#"}
-                                    desc={"Description"}
-                                    payerName={"Payer"}
-                                    amount={"Amount"}
-                                    isHeader
-                                />
+                            <div className="w-full max-h-[800px] py-4 space-y-2 overflow-y-auto">
                                 {
                                     transactions.map((trans, index) => (
                                         <TransItem
@@ -70,8 +57,7 @@ export default function HomePage() {
                         ) : null
                     }
                 </div>
-                <PeopleView />
-                <Invoice />
+                <Dashboard />
             </div>
         </div>
     )

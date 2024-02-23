@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import Person from "../../../interfaces/interfacePerson";
 import { DataContext, DataContextProps } from "@src/contexts/dataContext";
 import PersonBox from "./personBox";
-import { List, ListItem, ListItemButton } from "@mui/material";
+import { List, ListItem } from "@mui/material";
 
 interface Payment {
     receiverId: string,
@@ -24,13 +24,13 @@ export default function Dashboard() {
 
     let cashflow: { [id: string] : number; } = {};
     persons.forEach((person) => cashflow[person.id] = getBalance(person));
-    const cashflowDiv = Object.keys(cashflow).map((k, i) => 
-        <div key={i}>
-            <span>{persons.find(p => p.id === k)?.name}</span>
-            <span>: </span>
-            <span>{cashflow[k]}</span>
-        </div>
-    );
+    // const cashflowDiv = Object.keys(cashflow).map((k, i) => 
+    //     <div key={i}>
+    //         <span>{persons.find(p => p.id === k)?.name}</span>
+    //         <span>: </span>
+    //         <span>{cashflow[k]}</span>
+    //     </div>
+    // );
 
     const payments: Payment[] = [];
     let sortedPersons: Person[] = persons.slice().sort((a,b) => cashflow[b.id] - cashflow[a.id]);

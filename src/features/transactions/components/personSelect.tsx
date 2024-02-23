@@ -1,4 +1,4 @@
-import { ChangeEvent, ComponentProps, HTMLAttributes, SyntheticEvent, useContext, useState } from "react";
+import { HTMLAttributes, SyntheticEvent, useContext, useState } from "react";
 import CircleButton from "../../../components/buttons/circleButton";
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -19,7 +19,7 @@ interface PayeeSelectProps {
 export default function PersonSelect({ 
     readonly, label, value, onChange, onClose 
 }: PayeeSelectProps) {
-    const { persons, createPerson } = useContext(DataContext) as DataContextProps;
+    const { persons } = useContext(DataContext) as DataContextProps;
     const [payee, setPayee] = useState<IPerson|null>(value || null);
 
     const payeeOptions: IPerson[] = persons;

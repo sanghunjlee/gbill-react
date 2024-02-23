@@ -1,5 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, ParamParseKey, Params, RouteObject, useLoaderData, useNavigate } from "react-router-dom";
-import Transaction, { PartialTransaction } from "@src/interfaces/interfaceTransaction";
+import { LoaderFunctionArgs, useLoaderData, useNavigate } from "react-router-dom";
 import TransForm from "@src/features/transactions/components/transForm";
 import { useContext } from "react";
 import { DataContext, DataContextProps } from "@src/contexts/dataContext";

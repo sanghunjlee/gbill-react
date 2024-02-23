@@ -12,7 +12,7 @@ interface OwnerStateType {
 }
 
 const FieldSet = styled('fieldset', { shouldForwardProp: rootShouldForwardProp})(({
-    theme, ownerState
+    theme
 }: { theme: Theme, ownerState: OwnerStateType }) => {
     return {
         textAlign: 'left',

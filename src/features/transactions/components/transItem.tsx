@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import Person from "../../../interfaces/interfacePerson";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';

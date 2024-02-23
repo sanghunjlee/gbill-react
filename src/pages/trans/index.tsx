@@ -1,5 +1,5 @@
 
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import Button from "@src/components/buttons/button";
@@ -11,7 +11,7 @@ interface TransProps {
     onTransChange?: VoidFunction
 }
 
-export default function Trans({onTransChange}: TransProps) {
+export default function Trans({}: TransProps) {
     const navigate = useNavigate();
     const {persons, transactions, deleteAllTransactions} = useContext(DataContext) as DataContextProps;
     const [errorText, setErrorText] = useState("");
@@ -72,22 +72,11 @@ export default function Trans({onTransChange}: TransProps) {
                 </div>
             </div>
             <div className="w-full">  
-                <TransItem 
-                    index={"#"}
-                    desc={"Description"}
-                    payerName={"Payer"}
-                    amount={"Amount"}
-                    isHeader
-                />
                 {transactions?.map((t, i) => (
                     <Link to={`/gbill-react/trans/detail/${t.id}`}>
                         <TransItem 
                             key={i} 
-                            id={t.id}
-                            index={i.toString()}
-                            desc={t.desc}
-                            payerName={persons.find(p => p.id === t.payerId)?.name || ""}
-                            amount={"$" + t.amount.toFixed(2)}
+                            {...t}
                         />
                     </Link>
                 ))}

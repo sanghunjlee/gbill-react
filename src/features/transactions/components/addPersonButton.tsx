@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import { IconButton, TextField, TextFieldProps } from "@mui/material";
-import { ChangeEvent, useCallback, useEffect, useId, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useId, useRef, useState } from "react";
 
 interface AddPersonButtonProps extends Omit<TextFieldProps, "fullWidth"|"inputRef"|"value"|"onChange"|"onBlur"|"onKeyDown"> {
     onAddPerson?: (personName: string) => void

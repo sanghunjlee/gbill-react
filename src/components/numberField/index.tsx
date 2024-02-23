@@ -1,44 +1,37 @@
-import { FormControl, FormControlLabel, FormGroup, FormLabel, Input, InputBase, InputLabel, InputProps, OutlinedInput, TextField, TextFieldProps, Theme } from "@mui/material";
-import { ChangeEvent, ForwardedRef, SyntheticEvent, forwardRef, useId, useRef, useState, useEffect } from "react";
-import styled, { rootShouldForwardProp } from "@mui/material/styles/styled";
-import Outline from "./outline";
-import {
-    Unstable_NumberInput as BaseNumberInput,
-    NumberInputProps,
-    numberInputClasses,
-} from '@mui/base/Unstable_NumberInput';
+import { TextField, TextFieldProps } from "@mui/material";
 
-const NumberInput = forwardRef<HTMLDivElement>(function NumberInput(
-    props: NumberInputProps,
-    ref: ForwardedRef<HTMLDivElement>,
-) {
-    return (
-        <BaseNumberInput
-            {...props}
-            ref={ref}
-        />
-    )
-})
+
+// const NumberInput = forwardRef<HTMLDivElement>(function NumberInput(
+//     props: NumberInputProps,
+//     ref: ForwardedRef<HTMLDivElement>,
+// ) {
+//     return (
+//         <BaseNumberInput
+//             {...props}
+//             ref={ref}
+//         />
+//     )
+// })
 
 interface NumberFieldProps extends Omit<TextFieldProps, "type"|"placeholder"|"variant"|"label"> {}
 
 export default function NumberField(props: NumberFieldProps) {
-    const id = useId();
-    const [isFocus, setFocus] = useState(false);
+    // const id = useId();
+    // const [isFocus, setFocus] = useState(false);
 
-    const OutlinedFormGroup = styled(FormGroup)(({theme}) => {
-        return {
-            position: 'relative',
-            borderRadius: theme.shape.borderRadius,
-            [`&:hover`]: {
-                borderColor: theme.palette.text.primary
-            },
-            [`&:focused`]: {
-                borderColor: theme.palette.primary.main,
-                borderWidth: 2
-            }
-        }
-    })
+    // const OutlinedFormGroup = styled(FormGroup)(({theme}) => {
+    //     return {
+    //         position: 'relative',
+    //         borderRadius: theme.shape.borderRadius,
+    //         [`&:hover`]: {
+    //             borderColor: theme.palette.text.primary
+    //         },
+    //         [`&:focused`]: {
+    //             borderColor: theme.palette.primary.main,
+    //             borderWidth: 2
+    //         }
+    //     }
+    // })
 
     return (
         <TextField 

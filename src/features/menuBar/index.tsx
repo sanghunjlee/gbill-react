@@ -1,8 +1,3 @@
-import { useState } from "react";
-import ToggleButton from "../../components/buttons/toggleButton";
-import { Link } from "react-router-dom";
-import { IconButton } from "@mui/material";
-
 import DarkModeSwitch from "./components/darkModeSwitch";
 import LogoComponent from "./components/logoComponent";
 

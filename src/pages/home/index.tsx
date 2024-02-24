@@ -19,7 +19,7 @@ export default function HomePage() {
     }
 
     return (
-        <div className="w-[800px] mx-auto my-8">
+        <div className="w-[90%] lg:w-[800px] mx-auto py-8">
             <div
                 className="flex flex-col items-stretch"
             >

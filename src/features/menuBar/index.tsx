@@ -6,7 +6,7 @@ export default function MenuBar() {
     return (
         <div
             className={[
-                "static p-4 shadow-md",
+                "fixed top-0 left-0 right-0 h-fit bg-white/50 p-4 shadow-md backdrop-blur z-10",
                 "dark:border-gray-500"
             ].join(" ")}
         >

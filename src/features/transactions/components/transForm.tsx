@@ -86,7 +86,7 @@ export default function TransForm({
 
     return (
         <div className={[
-            "w-inherit m-2 p-2 flex flex-col items-center gap-8",
+            "p-2 flex flex-col items-center gap-8",
             "dark:text-gray-100"
         ].join(" ")}
         >
@@ -142,7 +142,7 @@ export default function TransForm({
                         }}
                     />
                 </div>
-                <div className="w-full flex justify-between">
+                <div className="w-full flex flex-col gap-8 lg:flex-row justify-between">
                     <div className="flex items-center gap-4">
                         <PersonSelect 
                             label="Payer"

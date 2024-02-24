@@ -1,6 +1,21 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { blueGrey, grey } from "@mui/material/colors";
+import { createTheme, PaletteColor, ThemeProvider } from "@mui/material/styles";
+import { blueGrey, grey, orange, yellow } from "@mui/material/colors";
 import { ComponentProps, Context, createContext, useMemo, useState } from "react";
+
+declare module "@mui/material/styles" {
+    interface Palette {
+        orangeTheme: string
+    }
+    interface PaletteOptions {
+        orangeTheme: PaletteColor
+    }
+}
+
+declare module "@mui/material/ToggleButton" {
+    interface ToggleButtonPropsColorOverrides {
+        orangeTheme: true
+    }
+}
 
 export interface ThemeContextProps {
     toggle: VoidFunction
@@ -26,11 +41,13 @@ export default function ThemeContextProvider({children}: ThemeProviderProps) {
         }
     }), [mode]);
 
+    const { palette } = createTheme();
     const theme = useMemo(() => createTheme({
         palette: {
             mode,
             primary: blueGrey,
             secondary: grey,
+            orangeTheme: palette.augmentColor({ color: orange })
         }
     }), [mode]);
 

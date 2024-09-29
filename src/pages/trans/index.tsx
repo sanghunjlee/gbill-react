@@ -2,10 +2,10 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import Button from "@src/components/buttons/button";
-import {TransItem} from "@src/features/transactions/components";
-import ErrorMessage from "@src/components/errorMessage";
-import { DataContext, DataContextProps } from "@src/contexts/dataContext";
+import Button from "@common/components/buttons/button";
+import {TransItem} from "@features/transactions/components";
+import ErrorMessage from "@common/components/errorMessage";
+import { DataContext, DataContextProps } from "@common/contexts/dataContext";
 
 interface TransProps {
     onTransChange?: VoidFunction

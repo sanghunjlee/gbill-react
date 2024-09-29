@@ -1,10 +1,10 @@
 import { HTMLAttributes, SyntheticEvent, useContext, useState } from "react";
-import CircleButton from "../../../components/buttons/circleButton";
+import CircleButton from "@common/components/buttons/circleButton";
 
 import CloseIcon from '@mui/icons-material/Close';
 import { Autocomplete, FilterOptionsState, TextField, createFilterOptions } from "@mui/material";
-import { DataContext, DataContextProps } from "@src/contexts/dataContext";
-import IPerson from "@src/interfaces/interfacePerson";
+import { DataContext, DataContextProps } from "@common/contexts/dataContext";
+import IPerson from "@common/interfaces/interfacePerson";
 
 const filter = createFilterOptions<IPerson>();
 

@@ -4,16 +4,23 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import './index.css';
+import { Provider } from 'react-redux';
 
-import HomePage from './pages/home'
-import Error from './pages/error'
-import Trans from './pages/trans';
-import TransAdd from './pages/trans/add';
-import TransEdit, {loader as transEditLoader} from './pages/trans/edit';
-import TransDetail, {loader as transDetailLoader} from './pages/trans/detail';
-import MainLayout from './layouts/mainLayout';
-import TransLayout from './layouts/transLayout';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+import '@src/index.css';
+
+import HomePage from '@pages/home'
+import Error from '@pages/error'
+import Trans from '@pages/trans';
+import TransAdd from '@pages/trans/add';
+import TransEdit, {loader as transEditLoader} from '@pages/trans/edit';
+import TransDetail, {loader as transDetailLoader} from '@pages/trans/detail';
+import MainLayout from '@layouts/mainLayout';
+import TransLayout from '@layouts/transLayout';
+import { store } from '@src/common/store';
 
 const router = createBrowserRouter([
   {
@@ -61,6 +68,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );

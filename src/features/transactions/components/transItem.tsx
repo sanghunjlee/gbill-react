@@ -2,9 +2,9 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { DataContext, DataContextProps } from "@src/contexts/dataContext";
+import { DataContext, DataContextProps } from "@common/contexts/dataContext";
 import { IconButton } from "@mui/material";
-import ITransaction from "@src/interfaces/interfaceTransaction";
+import ITransaction from "@common/interfaces/interfaceTransaction";
 
 interface TransItemProps extends Partial<ITransaction> {
     isHeader?: boolean

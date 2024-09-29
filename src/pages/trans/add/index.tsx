@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import TransForm from "@src/features/transactions/components/transForm";
-import { PartialTransaction } from "@src/interfaces/interfaceTransaction";
-import { DataContext, DataContextProps } from "@src/contexts/dataContext";
+import { PartialTransaction } from "@common/interfaces/interfaceTransaction";
+import { DataContext, DataContextProps } from "@common/contexts/dataContext";
 
 
 export default function TransAdd() {

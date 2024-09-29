@@ -7,7 +7,12 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: [
-      { find: '@src', replacement: '/src'}
+      { find: '@src', replacement: '/src'},
+      { find: '@assets', replacement: '/src/assets'},
+      { find: '@common', replacement: '/src/common'},
+      { find: '@features', replacement: '/src/features'},
+      { find: '@layouts', replacement: '/src/layouts'},
+      { find: '@pages', replacement: '/src/pages'},
     ]
   }
 })

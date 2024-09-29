@@ -1,12 +1,12 @@
 import { ChangeEvent, useContext, useState } from "react";
-import Transaction, { PartialTransaction } from "../../../interfaces/interfaceTransaction";
+import Transaction, { PartialTransaction } from "@common/interfaces/interfaceTransaction";
 import PersonSelect from "./personSelect";
 import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton, Switch } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import { DataContext, DataContextProps } from "@src/contexts/dataContext";
-import NumberField from "@src/components/numberField";
-import IPerson from "../../../interfaces/interfacePerson";
+import { DataContext, DataContextProps } from "@common/contexts/dataContext";
+import NumberField from "@common/components/numberField";
+import IPerson from "@common/interfaces/interfacePerson";
 
 
 

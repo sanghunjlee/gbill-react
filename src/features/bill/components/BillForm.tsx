@@ -59,6 +59,10 @@ export default function BillForm(props: BillFormProps) {
         setAmount(event.target.valueAsNumber);
     }
 
+    const handleTipChange = function(event: ChangeEvent<HTMLInputElement>) {
+        setTip(event.target.valueAsNumber);
+    }
+
     const handleItemDescriptionChange = function(event: ChangeEvent<HTMLInputElement>, itemId: string) {
         const newItems = items.map(it => {
             if (it.id === itemId) {
@@ -154,7 +158,7 @@ export default function BillForm(props: BillFormProps) {
                     onChange={handleDescriptionChange}
                 />
                 <Stack direction={"row"} gap={2} sx={{justifyContent: "space-between"}}>
-                    <PersonSelect 
+                    <PersonSelect
                         required
                         label="Payer"
                         value={payer}
@@ -172,6 +176,9 @@ export default function BillForm(props: BillFormProps) {
                         />
                         <TextField
                             label="Tip"
+                            type="number"
+                            value={tip}
+                            onChange={handleTipChange}
                         />
                     </Stack>
                 </Stack>

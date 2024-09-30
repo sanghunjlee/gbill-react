@@ -6,17 +6,17 @@ export interface BillState {
     bills: Bill[];
 }
 
-const initialState: BillState = {
+const initialBillState: BillState = {
     status: 'idle',
     bills: [],
 };
 
 export const billSlice = createSlice({
     name: 'bill',
-    initialState,
+    initialState: initialBillState,
     reducers: {
         createBill: (state, action: PayloadAction<Bill>) => {
-            if (state.bills.length === 0 || state.bills.find(b => b.id === action.payload.id) !== undefined) {
+            if (state.bills.find(b => b.id === action.payload.id) === undefined) {
                 state.bills.push(action.payload);
                 console.log("CreateBill finsihed successfully!");
             } else {

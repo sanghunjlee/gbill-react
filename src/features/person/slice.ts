@@ -6,14 +6,14 @@ export interface PersonState {
     persons: Person[];
 }
 
-const initialState: PersonState = {
+const initialPersonState: PersonState = {
     status: 'idle',
     persons: [],
 };
 
 export const personSlice = createSlice({
     name: 'person',
-    initialState,
+    initialState: initialPersonState,
     reducers: {
         addPerson: (state, action: PayloadAction<Person>) => {
             state.persons.push(action.payload);

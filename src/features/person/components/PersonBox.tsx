@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, type BoxProps } from "@mui/material";
 import type { Person } from "@src/features/person/interface";
 import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -6,16 +6,18 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useAppDispatch } from "@src/common/hooks";
 import { removePerson } from "@src/features/person/slice";
 
-interface PersonBoxProps {
+interface PersonBoxProps extends BoxProps {
     person: Person;
-    onDblClicked?: (event: MouseEvent) => void;
 }
 
 export default function PersonBox(props: PersonBoxProps) {
     const {
         person,
-        onDblClicked
+        onClick,
+        sx: sxProps,
+        ...otherProps
     } = props;
+
     const dispatch = useAppDispatch();
     const [hover, setHover] = useState(false);
     const [dblClicked, setDblClicked] = useState(false);
@@ -41,15 +43,6 @@ export default function PersonBox(props: PersonBoxProps) {
         person.name.split(' ').map(n => n.charAt(0).toUpperCase()).join(""), 
     [person]);
 
-    const handleBoxClick = function(event: MouseEvent) {
-        if (dblClicked) {
-            onDblClicked?.(event);
-            setDblClicked(false);
-        }
-
-        setDblClicked(true);
-    }
-
     const handleDelete = function(event: MouseEvent) {
         dispatch(removePerson(person));
     }
@@ -58,35 +51,37 @@ export default function PersonBox(props: PersonBoxProps) {
         <Box
             sx={{
                 position: "relative",
-                width: {
+                minWidth: {
                     xs: 60,
                     lg: 120
                 },
-                p: {
-                    sm: 1,
+                maxWidth: {
+                    xs: 120,
+                    lg: 360
+                },
+                px: {
+                    xs: 2,
+                    lg: 4
+                },
+                py: {
+                    xs: 1,
                     lg: 2
                 },
                 borderWidth: 1,
                 borderStyle: "solid",
-                borderColor: "primary.main",
+                borderColor: hover ? "primary.main" : "grey.400",
                 borderRadius: 2,
+                outline: hover ? 1 : 0,
+                outlineColor: "primary.main",
                 cursor: "pointer",
             }}
-            onClick={handleBoxClick}
+            onClick={onClick}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
+            {...otherProps}
         >
-            {hover ? (
-                <div className="absolute right-0 top-0">
-                    <IconButton aria-label="Delete" size="small" onClick={handleDelete}>
-                        <DeleteIcon fontSize="inherit"/>
-                    </IconButton>
-                </div>
-            ) : null}
             <div className="flex justify-center items-center gap-2 select-none">
-                <div>
-                    <Typography>{person.name}</Typography>
-                </div>
+                <Typography>{person.name}</Typography>
             </div>
         </Box>
     )

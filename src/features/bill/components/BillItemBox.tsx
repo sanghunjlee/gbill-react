@@ -1,4 +1,4 @@
-import { Box, type BoxProps } from "@mui/material";
+import { Box, IconButton, Typography, type BoxProps } from "@mui/material";
 import type { BillItem } from "@src/features/bill/interface";
 
 interface BillItemBoxProps extends BoxProps {
@@ -15,7 +15,6 @@ export default function BillItemBox(props: BillItemBoxProps) {
         <Box
             {...otherProps}
         >
-            
         </Box>
     )
 }

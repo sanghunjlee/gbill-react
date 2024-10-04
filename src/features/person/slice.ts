@@ -39,8 +39,13 @@ export const personSlice = createSlice({
         clearPersons: (state) => {
             state.persons = [];
         }
+    },
+    selectors: {
+        selectPersons: (state): Person[] => state.persons,
+        selectPersonById: (state, personId: string): Person|undefined => state.persons.find(p => p.id === personId)
     }
 });
 
 export const { addPerson, editPerson, removePerson, clearPersons } = personSlice.actions;
+export const { selectPersons, selectPersonById } = personSlice.selectors;
 export default personSlice.reducer;

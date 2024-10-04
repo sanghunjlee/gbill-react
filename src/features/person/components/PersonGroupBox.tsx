@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "@src/common/hooks";
 import PersonBox from "@src/features/person/components/PersonBox";
 import PersonEditForm from "@src/features/person/components/PersonEditForm";
 import type { Person } from "@src/features/person/interface";
-import { editPerson } from "@src/features/person/slice";
+import { editPerson, removePerson } from "@src/features/person/slice";
 import { useState, type FormEvent } from "react";
 
 
@@ -26,6 +26,12 @@ export default function PersonGroupBox() {
 
     const handleEditRequest = function(newPerson: Person) {
         dispatch(editPerson(newPerson));
+        handleModalClose();
+    }
+
+    const handleDeleteRequest = function(person: Person) {
+        dispatch(removePerson(person));
+        handleModalClose();
     }
 
     return (
@@ -33,7 +39,7 @@ export default function PersonGroupBox() {
             <Box>
                 <ul className="flex justify-center items-center gap-2">
                     {persons.map((p, i) => (
-                        <PersonBox key={i} person={p} onDblClicked={() => handleModalOpen(p)}/>
+                        <PersonBox key={i} person={p} onClick={() => handleModalOpen(p)}/>
                     ))}
                 </ul>
             </Box>
@@ -41,10 +47,9 @@ export default function PersonGroupBox() {
             {selected ? (
                 <CenteredModal
                     open={modalOpen}
-                    onClose={handleModalClose}
                 >
 
-                    <PersonEditForm person={selected} onSubmit={handleEditRequest} onCancel={handleModalClose}/>
+                    <PersonEditForm person={selected} onSubmit={handleEditRequest} onCancel={handleModalClose} onDelete={handleDeleteRequest}/>
                 </CenteredModal>
             ) : null}
         </>

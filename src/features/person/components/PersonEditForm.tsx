@@ -1,13 +1,15 @@
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import { Button, IconButton, Stack, TextField, Typography } from "@mui/material";
 import { useAppDispatch } from "@src/common/hooks";
 import type { Person } from "@src/features/person/interface";
 import { addPerson } from "@src/features/person/slice";
 import { useEffect, useId, useMemo, useRef, useState, type ChangeEvent, type ComponentProps, type FormEvent, type MouseEvent } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface PersonEditFormProps extends Omit<ComponentProps<"form">,"onSubmit"> {
     person?: Person;
     onSubmit?: (person: Person) => void;
     onCancel?: () => void;
+    onDelete?: (person: Person) => void;
 }
 
 export default function PersonEditForm(props: PersonEditFormProps) {
@@ -15,12 +17,14 @@ export default function PersonEditForm(props: PersonEditFormProps) {
         person,
 
         onSubmit,
-        onCancel
+        onCancel,
+        onDelete
     } = props
 
     const dispatch = useAppDispatch();
     
     const id = useId()
+    const { current:isEdit } = useRef(person !== undefined);
     const nameInputRef = useRef<HTMLInputElement>();
 
     const isNew = person === undefined;
@@ -49,6 +53,13 @@ export default function PersonEditForm(props: PersonEditFormProps) {
     const handleCancel = function(event: MouseEvent) {
         event.preventDefault();
         onCancel?.();
+    }
+
+    const handleDelete = function(event: MouseEvent) {
+        event.preventDefault();
+        if (person) {
+            onDelete?.(person);
+        }
     }
 
     const handleNameChange = function(event: ChangeEvent<HTMLInputElement>) {
@@ -87,7 +98,19 @@ export default function PersonEditForm(props: PersonEditFormProps) {
                     onChange={handleColorChange}
                 />
             </Stack>
-            <div className="flex justify-end mt-8">
+            <div className="flex justify-between mt-8">
+                <div>
+                    {isEdit ? (
+                        <Button 
+                            type="button"
+                            variant="outlined"
+                            color="error"
+                            onClick={handleDelete}
+                        >
+                            <DeleteIcon />
+                        </Button>
+                    ) : null}
+                </div>
                 <Stack direction="row" gap={2}>
                     <Button
                         type="submit"
@@ -99,7 +122,6 @@ export default function PersonEditForm(props: PersonEditFormProps) {
                     <Button
                         type="button"
                         variant="outlined"
-                        color="error"
                         onClick={handleCancel}
                     >
                         Cancel

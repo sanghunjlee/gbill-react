@@ -5,6 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Provider } from 'react-redux';
+import { store } from '@src/common/store';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -12,15 +13,9 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import '@src/index.css';
 
-import HomePage from '@pages/home'
-import Error from '@pages/error'
-import Trans from '@pages/trans';
-import TransAdd from '@pages/trans/add';
-import TransEdit, {loader as transEditLoader} from '@pages/trans/edit';
-import TransDetail, {loader as transDetailLoader} from '@pages/trans/detail';
 import MainLayout from '@layouts/mainLayout';
-import TransLayout from '@layouts/transLayout';
-import { store } from '@src/common/store';
+import Error from '@pages/error';
+import HomePage from '@pages/home';
 
 const router = createBrowserRouter([
   {
@@ -31,33 +26,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />
-      },
-      {
-        path: "trans",
-        element: <TransLayout />,
-        children: [
-          {
-            index: true,
-            element: <Trans />,
-          },
-          {
-            path: "add",
-            element: <TransAdd />,
-          },
-          {
-            path: "detail/:transId",
-            element: <TransDetail />,
-            loader: transDetailLoader
-          },
-          {
-            path: "edit/:transId",
-            element: <TransEdit />,
-            loader: transEditLoader
-          },
-          {
-            path: "delete/:transId"
-          }
-        ]
       },
     ]
   },

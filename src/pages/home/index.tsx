@@ -7,6 +7,7 @@ import HomeSection from "./components/HomeSection";
 import BillForm from "@src/features/bill/components/BillForm";
 import GroupSection from "@src/pages/home/components/GroupSection";
 import BillSection from "@src/pages/home/components/BillSection";
+import SummarySection from "@src/pages/home/components/SummarySection";
 
 
 export default function HomePage() {
@@ -34,6 +35,7 @@ export default function HomePage() {
                 <Divider />
                 <GroupSection />
                 <BillSection />
+                <SummarySection />
             </div>
         </div>
     )

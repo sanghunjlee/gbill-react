@@ -4,13 +4,15 @@ import { useAppSelector } from "@src/common/hooks";
 import type { Bill, BillItem } from "@src/features/bill/interface";
 import PersonSelect from "@src/features/person/components/PersonSelect";
 import type { Person } from "@src/features/person/interface";
-import { useEffect, useMemo, useState, type ChangeEvent, type ComponentProps, type FormEvent, type MouseEvent } from "react";
+import { selectPersons } from "@src/features/person/slice";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type ComponentProps, type FormEvent, type MouseEvent } from "react";
 
 interface BillFormProps extends Omit<ComponentProps<"form">, "onSubmit"> {
     bill?: Bill;
 
     onSubmit?: (bill: Bill) => void;
     onCancel?: () => void;
+    onDelete?: (bill: Bill) => void;
 }
 
 export default function BillForm(props: BillFormProps) {
@@ -19,40 +21,43 @@ export default function BillForm(props: BillFormProps) {
 
         onSubmit,
         onCancel,
-
+        onDelete,
         ...otherProps
     } = props;
 
-    const { persons } = useAppSelector(state => state.person);
+    const persons = useAppSelector(selectPersons);
+
+    const { current: isEdit } = useRef(bill !== undefined);
 
     const [bid, setBid] = useState(bill?.id ?? crypto.randomUUID());
-    const [description, setDescription] = useState(bill?.description ?? "");
+    const [description, setDescription] = useState(bill?.description || "");
     const [amount, setAmount] = useState(bill?.amount);
-    const [_tax, setTax] = useState<number>();
+    const [tax, setTax] = useState(bill?.tax);
     const [tip, setTip] = useState(bill?.tip);
-    const [payer, setPayer] = useState(bill?.payer);
-    const [items, setItems] = useState(bill?.items ?? []);
+    const [payerId, setPayerId] = useState(bill?.payerId);
+
+    const [billItems, setBillItems] = useState(bill?.items || []);
 
     const [createdAt, setCreatedAt] = useState(new Date());
 
     // Calculate tax
     useEffect(() => {
-        const subtotal = items.map(it => it.amount).reduce((p,c) => p+c, 0) || 0;
+        const subtotal = billItems.map(bi => bi.amount).reduce((p,c) => p+c, 0) || 0;
         const taxRate = amount ? (amount - subtotal) / amount : 0;
 
         setTax(taxRate);
-    }, [amount, items]);
+    }, [amount, billItems]);
 
     const taxText = useMemo(() => (
-        `${(_tax ? _tax * 100 : 0).toFixed(2)}%`
-    ), [_tax]);
+        `${(tax ? tax * 100 : 0).toFixed(2)}%`
+    ), [tax]);
 
     const handleDescriptionChange = function(event: ChangeEvent<HTMLInputElement>) {
         setDescription(event.target.value as string);
     }
 
     const handlePayerChange = function(newPayer: Person) {
-        setPayer(newPayer);
+        setPayerId(newPayer.id);
     }
 
     const handleAmountChange = function(event: ChangeEvent<HTMLInputElement>) {
@@ -64,60 +69,60 @@ export default function BillForm(props: BillFormProps) {
     }
 
     const handleItemDescriptionChange = function(event: ChangeEvent<HTMLInputElement>, itemId: string) {
-        const newItems = items.map(it => {
+        const newItems = billItems.map(it => {
             if (it.id === itemId) {
                 it.description = event.target.value;
             } 
             return it;
         });
 
-        setItems(newItems);
+        setBillItems(newItems);
     }
 
     const handleItemAmountChange = function(event: ChangeEvent<HTMLInputElement>, itemId: string) {
         const newAmount = event.target.valueAsNumber;
-        const newItems = items.map(it => {
-            if (it.id === itemId) {
-                it.amount = newAmount;
+        const newItems = billItems.map(bi => {
+            if (bi.id === itemId) {
+                bi.amount = newAmount;
             } 
-            return it;
+            return bi;
         });
 
-        setItems(newItems);
+        setBillItems(newItems);
     }
 
     const handleItemOrdererChange = function(event: ChangeEvent<HTMLInputElement>, itemId: string) {
-        const person = persons.find(p => p.id === event.target.value);
-        if (person === undefined) return;
+        const ordererId = event.target.value;
 
-        const newItems = items.map(it => {
+        const newItems = billItems.map(it => {
             if (it.id === itemId) {
-                if (it.orderers.includes(person)) {
-                    it.orderers = it.orderers.filter(o => o.id !== person.id);
+                if (it.ordererIds.includes(ordererId)) {
+                    it.ordererIds = it.ordererIds.filter(oid => oid !== ordererId);
                 } else {
-                    it.orderers.push(person);
+                    it.ordererIds.push(ordererId);
                 }
             }
             return it;
         });
 
-        setItems(newItems);
+        setBillItems(newItems);
     }
 
     const handleItemDelete = function(event: MouseEvent, itemId: string) {
-        const newItems = items.filter(it => it.id !== itemId);
-        setItems(newItems);
+        const newItems = billItems.filter(bi => bi.id !== itemId);
+        setBillItems(newItems);
     }
 
     const handleNewBillItemClick = function(event: MouseEvent) {
-        setItems([
-            ...items,
+        setBillItems([
+            ...billItems,
             {
                 id: crypto.randomUUID(),
-                order: items.length,
+                billId: bid,
+                order: billItems.length,
                 description: "",
                 amount: 0,
-                orderers: []
+                ordererIds: []
             } as BillItem
         ])
     }
@@ -129,9 +134,10 @@ export default function BillForm(props: BillFormProps) {
             id: bid,
             description,
             amount,
+            tax,
             tip,
-            payer,
-            items
+            payerId,
+            items: billItems
         } as Bill);
     }
 
@@ -139,6 +145,13 @@ export default function BillForm(props: BillFormProps) {
         event.preventDefault();
 
         onCancel?.();
+    }
+
+    const handleDelete = function(event: MouseEvent) {
+        event.preventDefault();
+        if (bill) {
+            onDelete?.(bill);
+        }
     }
 
     return (
@@ -161,7 +174,7 @@ export default function BillForm(props: BillFormProps) {
                     <PersonSelect
                         required
                         label="Payer"
-                        value={payer}
+                        value={persons.find(p => p.id === payerId)}
                         onChange={handlePayerChange}
                         sx={{minWidth: "210px"}}
                     />
@@ -205,7 +218,7 @@ export default function BillForm(props: BillFormProps) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {items?.map((r,i) => (
+                            {billItems.map((bi,i) => (
                                 <TableRow key={i}>
                                     <TableCell >
                                         <TextField 
@@ -214,8 +227,8 @@ export default function BillForm(props: BillFormProps) {
                                             inputProps={{
                                                 sx: {paddingTop: "8px"}
                                             }}
-                                            value={r.description}
-                                            onChange={(event: ChangeEvent<HTMLInputElement>) => handleItemDescriptionChange(event, r.id)}
+                                            value={bi.description}
+                                            onChange={(event: ChangeEvent<HTMLInputElement>) => handleItemDescriptionChange(event, bi.id)}
                                             
                                         />
                                     </TableCell>
@@ -227,8 +240,8 @@ export default function BillForm(props: BillFormProps) {
                                             inputProps={{
                                                 sx: {paddingTop: "8px"}
                                             }}
-                                            value={r.amount}
-                                            onChange={(event: ChangeEvent<HTMLInputElement>) => handleItemAmountChange(event, r.id)}
+                                            value={bi.amount}
+                                            onChange={(event: ChangeEvent<HTMLInputElement>) => handleItemAmountChange(event, bi.id)}
                                         />
                                     </TableCell>
                                     {persons.map((p, j) => (
@@ -236,15 +249,15 @@ export default function BillForm(props: BillFormProps) {
                                             <Checkbox 
                                                 size="small"
                                                 value={p.id}
-                                                checked={r.orderers && r.orderers.includes(p)}
-                                                onChange={(event: ChangeEvent<HTMLInputElement>) => handleItemOrdererChange(event, r.id)}
+                                                checked={bi.ordererIds && bi.ordererIds.includes(p.id)}
+                                                onChange={(event: ChangeEvent<HTMLInputElement>) => handleItemOrdererChange(event, bi.id)}
                                             />
                                         </TableCell>
                                     ))}
                                     <TableCell>
                                         <IconButton 
                                             size="small" 
-                                            onClick={(event: MouseEvent) => handleItemDelete(event, r.id)}
+                                            onClick={(event: MouseEvent) => handleItemDelete(event, bi.id)}
                                         >
                                             <DeleteIcon fontSize="inherit"/>
                                         </IconButton>
@@ -267,7 +280,19 @@ export default function BillForm(props: BillFormProps) {
                     Add a new bill item
                 </Button>
                 
-                <div className="flex justify-end mt-8">
+                <div className="flex justify-between mt-8">
+                    <div>
+                        {isEdit ? (
+                            <Button
+                                type="button"
+                                variant="outlined"
+                                color="error"
+                                onClick={handleDelete}
+                            >
+                                <DeleteIcon />
+                            </Button>
+                        ) : null}
+                    </div>
                     <Stack direction="row" gap={2}>
                         <Button
                             type="submit"
@@ -279,7 +304,6 @@ export default function BillForm(props: BillFormProps) {
                         <Button
                             type="button"
                             variant="outlined"
-                            color="error"
                             onClick={handleCancel}
                         >
                             Cancel

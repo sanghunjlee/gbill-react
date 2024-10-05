@@ -2,7 +2,8 @@ import { Stack } from "@mui/material";
 import { currencyToString } from "@src/common/helpers/currencyHelper";
 import { useAppDispatch, useAppSelector } from "@src/common/hooks";
 import { selectBillsCount, selectBillsAmount, selectBills } from "@src/features/bill/slice";
-import { getInvoices, getRadarInvoices, optimizeInvoices } from "@src/features/invoice/helper";
+import WeebGroupBox from "@src/features/invoice/components/WeebGroupBox";
+import { getInvoices, getRadarInvoices, getRadarWeebs, optimizeInvoices } from "@src/features/invoice/helper";
 import { selectPersonById, selectPersons } from "@src/features/person/slice";
 import HomeSection from "@src/pages/home/components/HomeSection";
 
@@ -18,7 +19,8 @@ export default function SummarySection() {
 
     const invoices = getInvoices(bills);
     const optimized = optimizeInvoices(invoices);
-    const radarized = getRadarInvoices(bills);
+    const weebs = getRadarWeebs(bills);
+    const radarized = getRadarInvoices(weebs);
 
     return (
         <HomeSection 
@@ -31,6 +33,7 @@ export default function SummarySection() {
                 <div>
                     Total amount: {currencyToString(totalAmount)}
                 </div>
+                <WeebGroupBox weebs={weebs} />
                 <div>
                     <ul>
                         {invoices.map((inv, i) => (

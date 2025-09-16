@@ -1,7 +1,7 @@
-import MenuBar from "@src/features/menuBar";
-import DataProvider from "@src/contexts/dataContext";
 import { Outlet } from "react-router-dom";
-import ThemeContextProvider from "@src/contexts/themeContext";
+import MenuBar from "@features/menuBar";
+import DataProvider from "@common/contexts/dataContext";
+import ThemeContextProvider from "@common/contexts/themeContext";
 
 
 export default function MainLayout() {

@@ -1,63 +1,41 @@
-import Dashboard from "@src/features/invoice/components/dashboard";
-import { useContext } from "react";
-import { DataContext, DataContextProps } from "@src/contexts/dataContext";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
-import TransItem from "@src/features/transactions/components/transItem";
+import { Box, Button, Divider, Modal } from "@mui/material";
+
+import Banner from "./components/Banner";
+import HomeSection from "./components/HomeSection";
+import BillForm from "@src/features/bill/components/BillForm";
+import GroupSection from "@src/pages/home/components/GroupSection";
+import BillSection from "@src/pages/home/components/BillSection";
+import SummarySection from "@src/pages/home/components/SummarySection";
 
 
 export default function HomePage() {
     const navigate = useNavigate();
-    const {transactions, deleteAllTransactions} = useContext(DataContext) as DataContextProps;
-
-    const handleAddTransaction = () => {
-        navigate("trans/add");
-    }
-
-    const handleClearTransactions = () => {
-        deleteAllTransactions();
-    }
-
     return (
-        <div className="w-[90%] lg:w-[800px] mx-auto py-8">
+        <div className="mx-auto my-8">
             <div
-                className="flex flex-col items-stretch"
+                className="flex flex-col items-stretch gap-12"
             >
-                <div className="">
-                    <div className="w-full p-4 rounded border-2">
-                        <div className="w-fit mx-auto flex flex-col items-stretch gap-2">
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                onClick={handleAddTransaction}
-                            >
-                                Add Transaction
-                            </Button>
-                            <Button
-                                color="secondary"
-                                variant="contained"
-                                onClick={handleClearTransactions}
-                            >
-                                Clear All Transactions
-                            </Button>
-                        </div>
-                    </div>
-                    {
-                        transactions && transactions.length > 0 ? (
-                            <div className="w-full max-h-[800px] py-4 space-y-2 overflow-y-auto">
-                                {
-                                    transactions.map((trans, index) => (
-                                        <TransItem
-                                            key={index}
-                                            {...trans}
-                                        />
-                                    ))
-                                }
-                            </div>
-                        ) : null
-                    }
-                </div>
-                <Dashboard />
+                <Banner />
+                <Divider />
+                <HomeSection title="How to Use">
+                    <ol>
+                        <li>
+                            Add people to the group
+                        </li>
+                        <li>
+                            Add bills to split
+                        </li>
+                        <li>
+                            Click `Split` to generate who-pays-whom table
+                        </li>
+                    </ol>
+                </HomeSection>
+                <Divider />
+                <GroupSection />
+                <BillSection />
+                <SummarySection />
             </div>
         </div>
     )

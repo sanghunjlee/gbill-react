@@ -1,5 +1,5 @@
 import { createTheme, PaletteColor, ThemeProvider } from "@mui/material/styles";
-import { blueGrey, grey, orange, yellow } from "@mui/material/colors";
+import { blueGrey, grey, orange } from "@mui/material/colors";
 import { ComponentProps, Context, createContext, useMemo, useState } from "react";
 
 declare module "@mui/material/styles" {

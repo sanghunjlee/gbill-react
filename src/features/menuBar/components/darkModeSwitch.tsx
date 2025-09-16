@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { useTheme } from '@mui/material/styles';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import { ThemeContext, ThemeContextProps } from "@src/contexts/themeContext";
+import { ThemeContext, ThemeContextProps } from "@common/contexts/themeContext";
 import ToggleButton from "@mui/material/ToggleButton";
 
 export default function DarkModeSwitch() {

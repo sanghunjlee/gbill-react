@@ -7,7 +7,7 @@ import { selectPersons } from "@src/features/person/slice";
 import { useMemo, useState } from "react";
 
 interface WeebBoxProps extends BoxProps {
-    weeb: Weeb;
+    weeb?: Weeb;
 }
 
 export default function WeebBox(props: WeebBoxProps) {
@@ -22,6 +22,10 @@ export default function WeebBox(props: WeebBoxProps) {
     const [hover, setHover] = useState(false);
 
     const weebName = useMemo(() => {
+        if (weeb === undefined) {
+            return "";
+        }
+
         return persons.find(p => p.id === weeb.id)?.name || "";
     }, [persons, weeb]);
 
@@ -51,10 +55,10 @@ export default function WeebBox(props: WeebBoxProps) {
                         {weebName}
                     </Typography>
                     <Typography variant="body1" color="primary">
-                        {currencyToString(weeb.profit)}
+                        {currencyToString(weeb?.profit)}
                     </Typography>
                     <Typography variant="body1" color="error">
-                        -{currencyToString(weeb.debt)}
+                        -{currencyToString(weeb?.debt)}
                     </Typography>
                 </Stack>
             </div>

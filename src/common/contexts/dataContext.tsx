@@ -1,5 +1,5 @@
-import IPerson from "@src/interfaces/interfacePerson";
-import ITransaction, { PartialTransaction } from "@src/interfaces/interfaceTransaction";
+import IPerson from "@common/interfaces/interfacePerson";
+import ITransaction, { PartialTransaction } from "@common/interfaces/interfaceTransaction";
 import { ComponentProps, Context, createContext, useCallback, useEffect, useReducer, useState } from "react";
 
 export interface DataContextProps {

@@ -21,13 +21,6 @@ export default function WeebGroupBox(props: WeebGroupBoxProps) {
 
     return (
         <Box>
-            <ul className="w-full p-4 flex justify-center gap-4">
-                {weebs.map((w,i) => (
-                    <li key={i}>
-                        <WeebBox weeb={w} />
-                    </li>
-                ))}
-            </ul>
             <div className="w-full p-4">
                 <ul className="w-full flex justify-evenly">
                     {legend.map((lg, i) => ( 
@@ -56,6 +49,13 @@ export default function WeebGroupBox(props: WeebGroupBoxProps) {
                     ))}
                 </ul>
             </div>
+            <ul className="w-full p-4 flex justify-center gap-4">
+                {weebs.map((w,i) => (
+                    <li key={i}>
+                        <WeebBox weeb={w} />
+                    </li>
+                ))}
+            </ul>
         </Box>
     )
 }
